@@ -1,66 +1,40 @@
-// Boshlang'ich localStorage sozlari
+// Dastlabki localStorage
 if (!localStorage.getItem('users')) localStorage.setItem('users', JSON.stringify([]));
 if (!localStorage.getItem('admins')) localStorage.setItem('admins', JSON.stringify([]));
-if (!localStorage.getItem('videos')) localStorage.setItem('videos', JSON.stringify([]));
+if (!localStorage.getItem('products')) {
+  // Standart bir nechta mahsulotlar
+  const defaultProducts = [
+    { id: 1, name: "Smartfon Redmi Note 13 Pro", price: 3500000, discount: 2990000, img: "https://picsum.photos/300/200?random=1" },
+    { id: 2, name: "Noutbuk Lenovo IdeaPad 3", price: 6200000, discount: 5800000, img: "https://picsum.photos/300/200?random=2" },
+    { id: 3, name: "Simsiz quloqchin AirPro 2", price: 450000, discount: 290000, img: "https://picsum.photos/300/200?random=3" }
+  ];
+  localStorage.setItem('products', JSON.stringify(defaultProducts));
+}
 
 let currentUser = null;
 
-// Modal boshqaruvi
-function openAuthModal() {
-  document.getElementById('auth-modal').classList.remove('hidden');
-}
-
-function closeAuthModal() {
-  document.getElementById('auth-modal').classList.add('hidden');
-}
+// Modal
+function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
+function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
 
 function switchAuthTab(tab) {
-  const loginTab = document.getElementById('tab-login');
-  const regTab = document.getElementById('tab-register');
-  const loginForm = document.getElementById('form-login');
-  const regForm = document.getElementById('form-register');
-
-  if (tab === 'login') {
-    loginTab.classList.add('active');
-    regTab.classList.remove('active');
-    loginForm.classList.remove('hidden');
-    regForm.classList.add('hidden');
-  } else {
-    regTab.classList.add('active');
-    loginTab.classList.remove('active');
-    regForm.classList.remove('hidden');
-    loginForm.classList.add('hidden');
-  }
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+  document.getElementById('form-login').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('form-register').classList.toggle('hidden', tab !== 'register');
 }
 
-// Sahifalarni almashtirish
 function showSection(sectionId) {
-  const sections = ['public-videos', 'user-panel', 'admin-panel', 'owner-panel'];
-  sections.forEach(id => document.getElementById(id).classList.add('hidden'));
+  ['public-products', 'admin-panel', 'owner-panel'].forEach(id => {
+    document.getElementById(id).classList.add('hidden');
+  });
   document.getElementById(sectionId).classList.remove('hidden');
 
-  if (sectionId === 'public-videos') renderVideos();
-  if (sectionId === 'admin-panel') renderAdminTable();
-  if (sectionId === 'owner-panel') renderAdmins();
+  if (sectionId === 'public-products') renderProducts();
+  if (sectionId === 'owner-panel') { renderOwnerProducts(); renderAdmins(); }
 }
 
-// Ro'yxatdan o'tish (User)
-function handleRegister() {
-  const login = document.getElementById('reg-username').value.trim();
-  const pass = document.getElementById('reg-password').value.trim();
-
-  if (!login || !pass) return alert("Barcha maydonlarni to'ldiring!");
-
-  let users = JSON.parse(localStorage.getItem('users'));
-  if (users.find(u => u.login === login)) return alert("Bu login allaqachon mavjud!");
-
-  users.push({ login, pass });
-  localStorage.setItem('users', JSON.stringify(users));
-  alert("Muvaffaqiyatli ro'yxatdan o'tdingiz!");
-  switchAuthTab('login');
-}
-
-// Kirish Tizimi
+// KIRISH TIZIMI
 function handleLogin() {
   const role = document.getElementById('login-role').value;
   const login = document.getElementById('login-username').value.trim();
@@ -70,7 +44,7 @@ function handleLogin() {
     if (login === 'amir' && pass === 'amorxon201101') {
       currentUser = { login: 'amir', role: 'owner' };
       showSection('owner-panel');
-      updateNavUI();
+      updateUI();
       closeAuthModal();
     } else {
       alert("Ega panel paroli yoki logini xato!");
@@ -81,18 +55,18 @@ function handleLogin() {
     if (found) {
       currentUser = { login, role: 'admin' };
       showSection('admin-panel');
-      updateNavUI();
+      updateUI();
       closeAuthModal();
     } else {
-      alert("Admin ma'lumotlari xato!");
+      alert("Admin logini yoki paroli xato!");
     }
   } else {
     let users = JSON.parse(localStorage.getItem('users'));
     let found = users.find(u => u.login === login && u.pass === pass);
     if (found) {
       currentUser = { login, role: 'user' };
-      showSection('user-panel');
-      updateNavUI();
+      alert("Muvaffaqiyatli kirdingiz!");
+      updateUI();
       closeAuthModal();
     } else {
       alert("Foydalanuvchi topilmadi!");
@@ -100,93 +74,74 @@ function handleLogin() {
   }
 }
 
-function updateNavUI() {
+function handleRegister() {
+  const login = document.getElementById('reg-username').value.trim();
+  const pass = document.getElementById('reg-password').value.trim();
+
+  if (!login || !pass) return alert("To'ldiring!");
+
+  let users = JSON.parse(localStorage.getItem('users'));
+  if (users.find(u => u.login === login)) return alert("Bu login band!");
+
+  users.push({ login, pass });
+  localStorage.setItem('users', JSON.stringify(users));
+  alert("Ro'yxatdan o'tdingiz!");
+  switchAuthTab('login');
+}
+
+function updateUI() {
   document.getElementById('logout-btn').classList.remove('hidden');
+  document.getElementById('login-nav-btn').classList.add('hidden');
 }
 
 function logout() {
   currentUser = null;
   document.getElementById('logout-btn').classList.add('hidden');
-  showSection('public-videos');
+  document.getElementById('login-nav-btn').classList.remove('hidden');
+  showSection('public-products');
 }
 
-// Video Yuklash
-function uploadVideo() {
-  const title = document.getElementById('video-title').value.trim();
-  const fileInput = document.getElementById('video-file');
-  const file = fileInput.files[0];
+// EGA PANEL — MAHSULOT QO'SHISH VA NARX O'ZGARTIRISH
+function addProduct() {
+  const name = document.getElementById('prod-name').value.trim();
+  const img = document.getElementById('prod-img').value.trim() || 'https://picsum.photos/300/200';
+  const price = Number(document.getElementById('prod-price').value);
+  const discount = Number(document.getElementById('prod-discount').value);
 
-  if (!title || !file) return alert("Barcha ma'lumotlarni kiriting!");
+  if (!name || !price) return alert("Nomi va narxini kiriting!");
 
-  const reader = new FileReader();
-  reader.onload = function (e) {
-    let videos = JSON.parse(localStorage.getItem('videos'));
-    videos.push({
-      id: Date.now(),
-      title,
-      src: e.target.result,
-      uploader: currentUser.login,
-      date: new Date().toLocaleDateString()
-    });
-    localStorage.setItem('videos', JSON.stringify(videos));
-    alert("Video muvaffaqiyatli saqlandi!");
-    showSection('public-videos');
-  };
-  reader.readAsDataURL(file);
+  let products = JSON.parse(localStorage.getItem('products'));
+  products.push({ id: Date.now(), name, img, price, discount });
+  localStorage.setItem('products', JSON.stringify(products));
+
+  alert("Mahsulot qo'shildi!");
+  renderOwnerProducts();
+  renderProducts();
 }
 
-// Videolarni chiqarish
-function renderVideos() {
-  const grid = document.getElementById('video-list');
-  grid.innerHTML = '';
-  let videos = JSON.parse(localStorage.getItem('videos'));
+function deleteProduct(id) {
+  let products = JSON.parse(localStorage.getItem('products'));
+  products = products.filter(p => p.id !== id);
+  localStorage.setItem('products', JSON.stringify(products));
+  renderOwnerProducts();
+}
 
-  document.getElementById('video-count').innerText = `${videos.length} ta video`;
+function editPrice(id) {
+  let products = JSON.parse(localStorage.getItem('products'));
+  let prod = products.find(p => p.id === id);
+  
+  let newPrice = prompt("Yangi narxni kiriting:", prod.price);
+  let newDiscount = prompt("Yangi chegirma narxini kiriting:", prod.discount);
 
-  if (videos.length === 0) {
-    grid.innerHTML = '<p style="color:var(--text-muted)">Hozircha videolar yo\'q.</p>';
-    return;
+  if (newPrice) {
+    prod.price = Number(newPrice);
+    prod.discount = Number(newDiscount) || Number(newPrice);
+    localStorage.setItem('products', JSON.stringify(products));
+    renderOwnerProducts();
   }
-
-  videos.forEach(v => {
-    grid.innerHTML += `
-      <div class="video-card">
-        <video controls src="${v.src}"></video>
-        <div class="video-info">
-          <h3>${v.title}</h3>
-          <span class="video-author"><i class="fa-solid fa-user"></i> ${v.uploader} • ${v.date}</span>
-        </div>
-      </div>
-    `;
-  });
 }
 
-// Admin Video Table
-function renderAdminTable() {
-  const tbody = document.getElementById('admin-video-table');
-  tbody.innerHTML = '';
-  let videos = JSON.parse(localStorage.getItem('videos'));
-
-  videos.forEach(v => {
-    tbody.innerHTML += `
-      <tr>
-        <td><b>${v.title}</b></td>
-        <td>${v.uploader}</td>
-        <td>${v.date}</td>
-        <td><button class="btn btn-danger" onclick="deleteVideo(${v.id})"><i class="fa-solid fa-trash"></i> O'chirish</button></td>
-      </tr>
-    `;
-  });
-}
-
-function deleteVideo(id) {
-  let videos = JSON.parse(localStorage.getItem('videos'));
-  videos = videos.filter(v => v.id !== id);
-  localStorage.setItem('videos', JSON.stringify(videos));
-  renderAdminTable();
-}
-
-// Ega Paneli — Admin Yaratish
+// EGA PANEL — ADMIN YARATISH
 function createAdmin() {
   const login = document.getElementById('new-admin-login').value.trim();
   const pass = document.getElementById('new-admin-password').value.trim();
@@ -210,8 +165,8 @@ function renderAdmins() {
   admins.forEach((a, index) => {
     tbody.innerHTML += `
       <tr>
-        <td>${a.login}</td>
-        <td><span class="count-badge">Admin</span></td>
+        <td><b>${a.login}</b></td>
+        <td><span class="badge-admin">Admin</span></td>
         <td><button class="btn btn-danger" onclick="deleteAdmin(${index})"><i class="fa-solid fa-trash"></i></button></td>
       </tr>
     `;
@@ -225,5 +180,61 @@ function deleteAdmin(index) {
   renderAdmins();
 }
 
-// Dastlabki yuklash
-renderVideos();
+// RENDER MAHSULOTLAR
+function renderProducts() {
+  const grid = document.getElementById('product-list');
+  grid.innerHTML = '';
+  let products = JSON.parse(localStorage.getItem('products'));
+  document.getElementById('product-count').innerText = `${products.length} ta mahsulot`;
+
+  products.forEach(p => {
+    grid.innerHTML += `
+      <div class="product-card">
+        <div class="product-img-box">
+          <img src="${p.img}" alt="${p.name}">
+          ${p.discount < p.price ? '<span class="badge-discount">CHEGIRMA</span>' : ''}
+        </div>
+        <div class="product-body">
+          <div class="product-title">${p.name}</div>
+          <div class="price-box">
+            ${p.discount < p.price ? `<div class="old-price">${p.price.toLocaleString()} so'm</div>` : ''}
+            <div class="current-price">${(p.discount || p.price).toLocaleString()} so'm</div>
+          </div>
+          <button class="cart-btn-pro"><i class="fa-solid fa-cart-shopping"></i> Savatga</button>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function renderOwnerProducts() {
+  const tbody = document.getElementById('owner-product-table');
+  tbody.innerHTML = '';
+  let products = JSON.parse(localStorage.getItem('products'));
+
+  products.forEach(p => {
+    tbody.innerHTML += `
+      <tr>
+        <td><img src="${p.img}" width="40" height="40" style="object-fit:cover; border-radius:4px;"></td>
+        <td><b>${p.name}</b></td>
+        <td>${p.price.toLocaleString()} so'm</td>
+        <td><b style="color:var(--primary)">${(p.discount || p.price).toLocaleString()} so'm</b></td>
+        <td>
+          <button class="btn btn-outline" style="padding:4px 8px;" onclick="editPrice(${p.id})"><i class="fa-solid fa-pen"></i> Narxni o'zgartirish</button>
+          <button class="btn btn-danger" style="padding:4px 8px;" onclick="deleteProduct(${p.id})"><i class="fa-solid fa-trash"></i></button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+// ADMIN PANEL TABS
+function switchAdminTab(tab) {
+  ['orders', 'delivery', 'support'].forEach(t => {
+    document.getElementById(`admin-tab-${t}`).classList.add('hidden');
+  });
+  document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
+}
+
+// Boshlang'ich render
+renderProducts();
