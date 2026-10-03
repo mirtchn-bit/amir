@@ -1,450 +1,252 @@
 <!DOCTYPE html>
-<html lang="uz" class="dark">
+<html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Benifit Market - Internet Do'kon</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brandDark: '#090D16',
-                        brandCard: '#111827',
-                        cyanNeon: '#00E5FF',
-                        cyanAccent: '#38BDF8',
-                        crimsonRed: '#EF4444'
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #090D16; color: #F3F4F6; }
-        .glass-panel { background: rgba(17, 24, 39, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>9market — Uzum Style Pro Market</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-brandDark text-gray-100 min-h-screen flex flex-col">
+<body>
 
-    <!-- Header -->
-    <header class="sticky top-0 z-40 w-full glass-panel border-b border-gray-800/80 px-4 py-3">
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
-            <!-- Logo -->
-            <div class="flex items-center gap-2 cursor-pointer" onclick="switchTab('market')">
-                <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-tr from-gray-900 to-black border border-cyanNeon/40">
-                    <i data-lucide="shopping-bag" class="w-6 h-6 text-cyanNeon"></i>
-                </div>
-                <span class="text-xl font-extrabold tracking-wider text-white">BENIFIT<span class="text-crimsonRed">.market</span></span>
-            </div>
-
-            <!-- Header Actions -->
-            <div class="flex items-center gap-3">
-                <!-- Cart Button -->
-                <button onclick="openCartModal()" class="relative flex items-center gap-2 bg-gray-900 hover:bg-gray-800 border border-gray-800 text-white font-bold text-xs px-3.5 py-2 rounded-xl">
-                    <i data-lucide="shopping-cart" class="w-4 h-4 text-cyanNeon"></i>
-                    <span>Savatcha</span>
-                    <span id="cartCountBadge" class="bg-crimsonRed text-white text-[10px] px-1.5 py-0.5 rounded-full">0</span>
-                </button>
-
-                <!-- Auth Area -->
-                <div id="authArea"></div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <div class="flex-1 max-w-7xl w-full mx-auto flex gap-6 px-4 py-6">
-        <!-- Sidebar Navigation -->
-        <aside class="hidden lg:flex flex-col w-64 gap-2">
-            <div class="glass-panel p-4 rounded-2xl flex flex-col gap-1">
-                <button onclick="switchTab('market')" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-cyanNeon bg-cyanNeon/10">
-                    <i data-lucide="store" class="w-5 h-5"></i> Barcha Mahsulotlar
-                </button>
-                <div id="adminSidebarBtn" class="hidden">
-                    <button onclick="switchTab('ownerPanel')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-yellow-400 bg-yellow-400/10 border border-yellow-400/30">
-                        <i data-lucide="shield-check" class="w-5 h-5"></i> Ega & Admin Panel
-                    </button>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Dynamic Panels -->
-        <main class="flex-1 min-w-0">
-            <!-- 1. MARKET PRODUCTS GRID -->
-            <div id="view-market" class="view-panel space-y-4">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                        <i data-lucide="package" class="text-cyanNeon"></i> Mahsulotlar Katalogi
-                    </h2>
-                    <div id="addProductBtnArea" class="hidden">
-                        <button onclick="openAddProductModal()" class="bg-cyanNeon text-gray-950 font-bold text-xs px-3 py-2 rounded-xl flex items-center gap-1">
-                            <i data-lucide="plus"></i> Mahsulot Qo'shish
-                        </button>
-                    </div>
-                </div>
-
-                <div id="productsContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5"></div>
-            </div>
-
-            <!-- 2. OWNER & ADMIN CONTROL PANEL -->
-            <div id="view-ownerPanel" class="view-panel hidden space-y-6">
-                <div class="glass-panel p-6 rounded-2xl border border-yellow-500/30">
-                    <h2 class="text-xl font-bold text-yellow-400 flex items-center gap-2 mb-1">
-                        <i data-lucide="crown"></i> Ega va Admin Boshqaruv Paneli
-                    </h2>
-                    <p class="text-xs text-gray-400">Yangi adminlar biriktirish va foydalanuvchilar bazasini boshqarish.</p>
-                </div>
-
-                <!-- Admin Yaratish (Faqat Ega uchun) -->
-                <div id="createAdminSection" class="glass-panel p-6 rounded-2xl border border-gray-800 hidden">
-                    <h3 class="text-sm font-bold text-cyanNeon mb-3">Yangi Admin Tayinlash</h3>
-                    <form onsubmit="handleCreateAdmin(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <input type="text" id="newAdminUser" placeholder="Admin Logini" required class="bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
-                        <input type="password" id="newAdminPass" placeholder="Admin Paroli" required class="bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
-                        <button type="submit" class="bg-cyanNeon text-gray-950 font-bold rounded-xl text-xs py-2">Admin Qo'shish</button>
-                    </form>
-                </div>
-
-                <!-- Foydalanuvchilar Ro'yxati -->
-                <div class="glass-panel p-6 rounded-2xl border border-gray-800">
-                    <h3 class="text-sm font-bold text-white mb-3">Tizimdagi Adminlar va Foydalanuvchilar</h3>
-                    <div id="usersTable" class="space-y-2"></div>
-                </div>
-            </div>
-        </main>
+  <!-- HEADER -->
+  <header class="navbar">
+    <div class="logo-container" onclick="showSection('public-products')">
+      <span class="logo-text">9market</span>
+      <span class="logo-badge">PRO</span>
+    </div>
+    
+    <div class="search-bar">
+      <input type="text" placeholder="Mahsulotlar bo'yicha qidiruv...">
+      <button><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
-    <!-- ADD PRODUCT MODAL (Admin/Owner for) -->
-    <div id="productModal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden z-50">
-        <div class="glass-panel max-w-md w-full rounded-2xl p-6 relative">
-            <button onclick="closeAddProductModal()" class="absolute top-4 right-4 text-gray-400"><i data-lucide="x"></i></button>
-            <h3 class="text-lg font-bold text-white mb-4">Yangi Mahsulot Qo'shish</h3>
-            
-            <form onsubmit="handleAddProduct(event)" class="space-y-3">
-                <input type="text" id="pTitle" placeholder="Mahsulot nomi" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2.5 text-xs text-white">
-                <input type="number" id="pPrice" placeholder="Narxi (so'mda)" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2.5 text-xs text-white">
-                <input type="url" id="pImg" placeholder="Rasm URL havolasi" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2.5 text-xs text-white">
-                <textarea id="pDesc" placeholder="Mahsulot haqida qisqacha tavsif" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2.5 text-xs text-white"></textarea>
-                <button type="submit" class="w-full bg-cyanNeon text-gray-950 font-bold py-2.5 rounded-xl text-xs">Saqlash</button>
-            </form>
-        </div>
+    <div class="nav-actions">
+      <button class="btn btn-outline" onclick="showSection('public-products')">
+        <i class="fa-solid fa-store"></i> Do'kon
+      </button>
+      <button class="btn btn-primary" id="login-nav-btn" onclick="openAuthModal()">
+        <i class="fa-solid fa-user"></i> Kirish
+      </button>
+      <button id="logout-btn" class="btn btn-danger hidden" onclick="logout()">
+        <i class="fa-solid fa-right-from-bracket"></i> Chiqish
+      </button>
     </div>
+  </header>
 
-    <!-- CART MODAL -->
-    <div id="cartModal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden z-50">
-        <div class="glass-panel max-w-md w-full rounded-2xl p-6 relative flex flex-col max-h-[80vh]">
-            <button onclick="closeCartModal()" class="absolute top-4 right-4 text-gray-400"><i data-lucide="x"></i></button>
-            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                <i data-lucide="shopping-cart" class="text-cyanNeon"></i> Savatchangiz
-            </h3>
-            
-            <div id="cartList" class="flex-1 overflow-y-auto space-y-3 pr-1"></div>
+  <!-- MAIN CONTAINER -->
+  <main class="main-container">
 
-            <div class="pt-4 mt-4 border-t border-gray-800 flex items-center justify-between">
-                <div>
-                    <span class="text-xs text-gray-400 block">Jami summa:</span>
-                    <strong id="cartTotalPrice" class="text-lg font-bold text-cyanNeon">0 so'm</strong>
-                </div>
-                <button onclick="checkout()" class="bg-gradient-to-r from-cyanNeon to-cyanAccent text-gray-950 font-bold px-4 py-2.5 rounded-xl text-xs">
-                    Buyurtma berish
-                </button>
+    <!-- 1. DO'KON / MAHSULOTLAR -->
+    <section id="public-products" class="section-block">
+      <div class="banner-red-line">
+        <h2>🔥 MEGA CHEGIRMALAR VA TEZ KOR YETKAZISH!</h2>
+      </div>
+      
+      <div class="section-header" style="margin-top: 20px;">
+        <h2><i class="fa-solid fa-fire text-red"></i> Ommabop Mahsulotlar</h2>
+        <span class="count-badge" id="product-count">0 ta mahsulot</span>
+      </div>
+      <div id="product-list" class="product-grid"></div>
+    </section>
+
+    <!-- 2. ADMIN PANEL (Faqat Buyurtma, Dostavka, Support) -->
+    <section id="admin-panel" class="section-block hidden">
+      <div class="card">
+        <div class="panel-header">
+          <h2><i class="fa-solid fa-headset"></i> Admin Boshqaruv Paneli</h2>
+          <span class="badge-admin">Cheklangan Huquq</span>
+        </div>
+
+        <div class="admin-tabs">
+          <button class="tab-btn active" onclick="switchAdminTab('orders')"><i class="fa-solid fa-box"></i> Buyurtmalar</button>
+          <button class="tab-btn" onclick="switchAdminTab('delivery')"><i class="fa-solid fa-truck-fast"></i> Dostavka</button>
+          <button class="tab-btn" onclick="switchAdminTab('support')"><i class="fa-solid fa-comments"></i> Support (Yordam)</button>
+        </div>
+
+        <!-- Buyurtmalar -->
+        <div id="admin-tab-orders" class="tab-content">
+          <h3>Kelgan Buyurtmalar</h3>
+          <div class="table-wrapper">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Mijoz</th>
+                  <th>Mahsulot</th>
+                  <th>Summa</th>
+                  <th>Holat</th>
+                </tr>
+              </thead>
+              <tbody id="orders-table-body">
+                <tr><td colspan="5">Hozircha buyurtmalar yo'q</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Dostavka -->
+        <div id="admin-tab-delivery" class="tab-content hidden">
+          <h3>Yetkazib Berish Holati</h3>
+          <p class="subtitle">Kuryerlar va yo'ldagi buyurtmalar nazorati</p>
+          <div class="delivery-status-box">
+            <div class="status-card">
+              <i class="fa-solid fa-clock"></i>
+              <h4>Kutilmoqda</h4>
+              <span>0 ta</span>
             </div>
-        </div>
-    </div>
-
-    <!-- AUTH MODAL -->
-    <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden z-50">
-        <div class="glass-panel max-w-sm w-full rounded-2xl p-6 relative">
-            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400"><i data-lucide="x"></i></button>
-            <h3 id="authTitle" class="text-lg font-bold text-white mb-4">Tizimga Kirish</h3>
-            
-            <form onsubmit="handleAuthSubmit(event)" class="space-y-3">
-                <input type="text" id="authLogin" placeholder="Login" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2.5 text-xs text-white">
-                <input type="password" id="authPass" placeholder="Parol" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2.5 text-xs text-white">
-                <button type="submit" class="w-full bg-cyanNeon text-gray-950 font-bold py-2.5 rounded-xl text-xs">Tasdiqlash</button>
-            </form>
-            <div class="mt-3 text-center">
-                <button onclick="toggleAuthMode()" id="authToggleBtn" class="text-[11px] text-cyanAccent underline">Ro'yxatdan o'tish</button>
+            <div class="status-card">
+              <i class="fa-solid fa-truck"></i>
+              <h4>Yo'lda</h4>
+              <span>0 ta</span>
             </div>
+            <div class="status-card">
+              <i class="fa-solid fa-circle-check"></i>
+              <h4>Yetkazildi</h4>
+              <span>0 ta</span>
+            </div>
+          </div>
         </div>
+
+        <!-- Support -->
+        <div id="admin-tab-support" class="tab-content hidden">
+          <h3>Support / Mijozlar Xabarlari</h3>
+          <div class="support-list">
+            <div class="support-item">
+              <strong>Mijoz #102:</strong> Dostavka vaqti qachon?
+              <button class="btn btn-sm btn-primary">Javob berish</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 3. EGA PANELI (SUPER ADMIN - Full Control) -->
+    <section id="owner-panel" class="section-block hidden">
+      <div class="card owner-card">
+        <div class="owner-header">
+          <h2><i class="fa-solid fa-crown text-gold"></i> Ega Paneli (Super Admin)</h2>
+          <span class="status-online">Sizda Barcha Huquqlar Mavjud</span>
+        </div>
+
+        <!-- Mahsulot Qo'shish va Tahrirlash -->
+        <div class="sub-card">
+          <h3><i class="fa-solid fa-plus-circle"></i> Yangi Mahsulot Qo'shish / Narx O'zgartirish</h3>
+          <div class="form-grid-4">
+            <input type="text" id="prod-name" placeholder="Mahsulot nomi">
+            <input type="text" id="prod-img" placeholder="Rasm URL havolasi">
+            <input type="number" id="prod-price" placeholder="Asl narxi (so'm)">
+            <input type="number" id="prod-discount" placeholder="Chegirma narxi (so'm)">
+          </div>
+          <button class="btn btn-gradient full-width" style="margin-top: 10px;" onclick="addProduct()">
+            <i class="fa-solid fa-plus"></i> Mahsulotni Saqlash
+          </button>
+        </div>
+
+        <!-- Admin Tayinlash -->
+        <div class="sub-card" style="margin-top: 20px;">
+          <h3><i class="fa-solid fa-user-shield"></i> Admin Tayinlash va Nazorat</h3>
+          <div class="form-grid-3">
+            <input type="text" id="new-admin-login" placeholder="Yangi Admin Logini">
+            <input type="password" id="new-admin-password" placeholder="Yangi Admin Paroli">
+            <button class="btn btn-gradient" onclick="createAdmin()">Admin Yaratish</button>
+          </div>
+          
+          <h4 style="margin-top: 15px;">Mavjud Adminlar:</h4>
+          <div class="table-wrapper">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Admin Login</th>
+                  <th>Huquqi</th>
+                  <th>Amallar</th>
+                </tr>
+              </thead>
+              <tbody id="admin-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Barcha Mahsulotlarni Boshqarish -->
+        <div class="sub-card" style="margin-top: 20px;">
+          <h3><i class="fa-solid fa-list-check"></i> Mahsulotlar Ro'yxati va Narxlarini Tahrirlash</h3>
+          <div class="table-wrapper">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Rasm</th>
+                  <th>Nomi</th>
+                  <th>Narxi</th>
+                  <th>Chegirma</th>
+                  <th>Amallar</th>
+                </tr>
+              </thead>
+              <tbody id="owner-product-table"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- AUTH MODAL -->
+  <div id="auth-modal" class="modal hidden">
+    <div class="modal-overlay" onclick="closeAuthModal()"></div>
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+      
+      <div class="modal-tabs">
+        <button id="tab-login" class="tab-btn active" onclick="switchAuthTab('login')">Kirish</button>
+        <button id="tab-register" class="tab-btn" onclick="switchAuthTab('register')">Ro'yxatdan o'tish</button>
+      </div>
+
+      <!-- Kirish Formasi -->
+      <div id="form-login" class="auth-form">
+        <div class="form-group">
+          <label>Tizimdagi Rolingiz</label>
+          <select id="login-role">
+            <option value="user">Foydalanuvchi</option>
+            <option value="admin">Admin (Dostavka, Buyurtma, Support)</option>
+            <option value="owner">Ega Panel (To'liq Nazorat)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Login</label>
+          <input type="text" id="login-username" placeholder="Loginingizni kiriting">
+        </div>
+        <div class="form-group">
+          <label>Parol</label>
+          <input type="password" id="login-password" placeholder="••••••••">
+        </div>
+        <button class="btn btn-gradient full-width" onclick="handleLogin()">Kirish</button>
+
+        <div class="social-divider"><span>yoki quyidagilar orqali kiring</span></div>
+        <div class="social-auth-grid">
+          <button class="social-btn phone-btn"><i class="fa-solid fa-phone"></i> Telefon (SMS)</button>
+          <button class="social-btn google-btn"><i class="fa-brands fa-google"></i> Google</button>
+          <button class="social-btn telegram-btn"><i class="fa-brands fa-telegram"></i> Telegram</button>
+        </div>
+      </div>
+
+      <!-- Ro'yxatdan o'tish -->
+      <div id="form-register" class="auth-form hidden">
+        <div class="form-group">
+          <label>Login</label>
+          <input type="text" id="reg-username" placeholder="Yangi login">
+        </div>
+        <div class="form-group">
+          <label>Parol</label>
+          <input type="password" id="reg-password" placeholder="Parol">
+        </div>
+        <button class="btn btn-gradient full-width" onclick="handleRegister()">Hisob Yaratish</button>
+      </div>
+
     </div>
+  </div>
 
-    <script>
-        // Storage Setup
-        let users = JSON.parse(localStorage.getItem('m_users')) || [];
-        let products = JSON.parse(localStorage.getItem('m_products')) || [
-            { id: 1, title: 'Wireless Headphones', price: 350000, img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=80', desc: 'Yuqori sifatli simsiz quloqchinlar.' },
-            { id: 2, title: 'Smartwatch Series 9', price: 420000, img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=80', desc: 'Aqlli soat, suvga chidamli.' }
-        ];
-        let cart = JSON.parse(localStorage.getItem('m_cart')) || [];
-        let currentUser = JSON.parse(localStorage.getItem('m_current_user')) || null;
-        let isRegisterMode = false;
-
-        document.addEventListener('DOMContentLoaded', () => {
-            renderAuthUI();
-            renderProducts();
-            updateCartBadge();
-            lucide.createIcons();
-        });
-
-        // Auth Operations
-        function renderAuthUI() {
-            const container = document.getElementById('authArea');
-            const adminBtn = document.getElementById('adminSidebarBtn');
-            const addProductBtnArea = document.getElementById('addProductBtnArea');
-
-            if (currentUser) {
-                container.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs text-gray-300 font-bold">${currentUser.login} (${currentUser.role})</span>
-                        <button onclick="logout()" class="text-xs bg-red-500/20 text-red-400 px-2.5 py-1.5 rounded-lg font-semibold">Chiqish</button>
-                    </div>
-                `;
-                if (currentUser.role === 'owner' || currentUser.role === 'admin') {
-                    adminBtn.classList.remove('hidden');
-                    addProductBtnArea.classList.remove('hidden');
-                } else {
-                    adminBtn.classList.add('hidden');
-                    addProductBtnArea.classList.add('hidden');
-                }
-            } else {
-                container.innerHTML = `
-                    <button onclick="openAuthModal()" class="text-xs bg-cyanNeon text-gray-950 font-bold px-3.5 py-2 rounded-xl">Kirish / Registratsiya</button>
-                `;
-                adminBtn.classList.add('hidden');
-                addProductBtnArea.classList.add('hidden');
-            }
-        }
-
-        function handleAuthSubmit(e) {
-            e.preventDefault();
-            const login = document.getElementById('authLogin').value.trim();
-            const pass = document.getElementById('authPass').value.trim();
-
-            if (login === 'amir' && pass === 'amorxon201101') {
-                currentUser = { login: 'amir', role: 'owner' };
-                saveSession();
-                return;
-            }
-
-            if (isRegisterMode) {
-                const exists = users.find(u => u.login === login);
-                if (exists) return alert('Bu login band!');
-                
-                const newUser = { login, pass, role: 'user' };
-                users.push(newUser);
-                localStorage.setItem('m_users', JSON.stringify(users));
-                currentUser = newUser;
-            } else {
-                const user = users.find(u => u.login === login && u.pass === pass);
-                if (!user) return alert('Login yoki parol xato!');
-                currentUser = user;
-            }
-
-            saveSession();
-        }
-
-        function saveSession() {
-            localStorage.setItem('m_current_user', JSON.stringify(currentUser));
-            closeAuthModal();
-            renderAuthUI();
-        }
-
-        function logout() {
-            currentUser = null;
-            localStorage.removeItem('m_current_user');
-            renderAuthUI();
-            switchTab('market');
-        }
-
-        // Product Operations
-        function handleAddProduct(e) {
-            e.preventDefault();
-            if (currentUser?.role !== 'owner' && currentUser?.role !== 'admin') return alert('Ruxsat yo\'q!');
-
-            const newProduct = {
-                id: Date.now(),
-                title: document.getElementById('pTitle').value,
-                price: Number(document.getElementById('pPrice').value),
-                img: document.getElementById('pImg').value,
-                desc: document.getElementById('pDesc').value
-            };
-
-            products.unshift(newProduct);
-            localStorage.setItem('m_products', JSON.stringify(products));
-            closeAddProductModal();
-            renderProducts();
-        }
-
-        function deleteProduct(id) {
-            if (currentUser?.role !== 'owner' && currentUser?.role !== 'admin') return;
-            products = products.filter(p => p.id !== id);
-            localStorage.setItem('m_products', JSON.stringify(products));
-            renderProducts();
-        }
-
-        function renderProducts() {
-            const container = document.getElementById('productsContainer');
-            if (products.length === 0) {
-                container.innerHTML = `<div class="text-xs text-gray-500 col-span-full text-center py-10">Mahsulotlar mavjud emas.</div>`;
-                return;
-            }
-
-            container.innerHTML = products.map(p => `
-                <div class="glass-panel rounded-2xl overflow-hidden border border-gray-800 flex flex-col justify-between">
-                    <img src="${p.img}" class="w-full h-44 object-cover bg-black">
-                    <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
-                        <div>
-                            <h3 class="font-bold text-white text-sm">${p.title}</h3>
-                            <p class="text-xs text-gray-400 mt-1 line-clamp-2">${p.desc}</p>
-                        </div>
-                        <div class="flex items-center justify-between pt-2 border-t border-gray-800">
-                            <span class="text-cyanNeon font-extrabold text-sm">${p.price.toLocaleString()} so'm</span>
-                            <div class="flex gap-2">
-                                ${ (currentUser?.role === 'owner' || currentUser?.role === 'admin') ? `
-                                    <button onclick="deleteProduct(${p.id})" class="p-2 text-red-400 bg-red-500/10 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                                ` : ''}
-                                <button onclick="addToCart(${p.id})" class="bg-cyanNeon text-gray-950 p-2 rounded-lg font-bold">
-                                    <i data-lucide="shopping-cart" class="w-4 h-4"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            lucide.createIcons();
-        }
-
-        // Cart Logic
-        function addToCart(productId) {
-            const prod = products.find(p => p.id === productId);
-            if (!prod) return;
-
-            const cartItem = cart.find(c => c.id === productId);
-            if (cartItem) {
-                cartItem.qty += 1;
-            } else {
-                cart.push({ ...prod, qty: 1 });
-            }
-
-            localStorage.setItem('m_cart', JSON.stringify(cart));
-            updateCartBadge();
-            alert('Mahsulot savatchaga qo\'shildi!');
-        }
-
-        function updateCartBadge() {
-            const count = cart.reduce((acc, item) => acc + item.qty, 0);
-            document.getElementById('cartCountBadge').innerText = count;
-        }
-
-        function renderCart() {
-            const list = document.getElementById('cartList');
-            const totalEl = document.getElementById('cartTotalPrice');
-
-            if (cart.length === 0) {
-                list.innerHTML = `<div class="text-xs text-gray-500 text-center py-6">Savatchangiz bo'sh.</div>`;
-                totalEl.innerText = '0 so\'m';
-                return;
-            }
-
-            let total = 0;
-            list.innerHTML = cart.map(item => {
-                total += item.price * item.qty;
-                return `
-                    <div class="flex items-center justify-between p-3 bg-gray-900 rounded-xl border border-gray-800 text-xs">
-                        <div class="flex items-center gap-3">
-                            <img src="${item.img}" class="w-10 h-10 rounded-lg object-cover">
-                            <div>
-                                <h4 class="font-bold text-white">${item.title}</h4>
-                                <span class="text-cyanNeon">${item.price.toLocaleString()} so'm x ${item.qty}</span>
-                            </div>
-                        </div>
-                        <button onclick="removeFromCart(${item.id})" class="text-red-400"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                    </div>
-                `;
-            }).join('');
-
-            totalEl.innerText = `${total.toLocaleString()} so'm`;
-            lucide.createIcons();
-        }
-
-        function removeFromCart(id) {
-            cart = cart.filter(i => i.id !== id);
-            localStorage.setItem('m_cart', JSON.stringify(cart));
-            updateCartBadge();
-            renderCart();
-        }
-
-        function checkout() {
-            if (cart.length === 0) return alert('Savatcha bo\'sh!');
-            if (!currentUser) return alert('Buyurtma berish uchun avval tizimga kiring!');
-            alert('Buyurtmangiz qabul qilindi! Operatorlar tez orada bog\'lanishadi.');
-            cart = [];
-            localStorage.setItem('m_cart', JSON.stringify(cart));
-            updateCartBadge();
-            closeCartModal();
-        }
-
-        // Owner/Admin Functionality
-        function handleCreateAdmin(e) {
-            e.preventDefault();
-            if (currentUser?.role !== 'owner') return alert('Ruxsat yo\'q!');
-            const login = document.getElementById('newAdminUser').value.trim();
-            const pass = document.getElementById('newAdminPass').value.trim();
-
-            users.push({ login, pass, role: 'admin' });
-            localStorage.setItem('m_users', JSON.stringify(users));
-            alert('Yangi Admin yaratildi!');
-            renderOwnerPanel();
-        }
-
-        function deleteUser(login) {
-            if (currentUser?.role !== 'owner') return;
-            users = users.filter(u => u.login !== login);
-            localStorage.setItem('m_users', JSON.stringify(users));
-            renderOwnerPanel();
-        }
-
-        function renderOwnerPanel() {
-            const list = document.getElementById('usersTable');
-            const createSection = document.getElementById('createAdminSection');
-
-            if (currentUser?.role === 'owner') createSection.classList.remove('hidden');
-
-            list.innerHTML = users.map(u => `
-                <div class="flex items-center justify-between p-3 bg-gray-900 rounded-xl text-xs">
-                    <div>
-                        <span class="font-bold text-white">${u.login}</span> 
-                        <span class="text-gray-500">(${u.role})</span>
-                    </div>
-                    ${currentUser?.role === 'owner' ? `<button onclick="deleteUser('${u.login}')" class="text-red-400 font-bold">O'chirish</button>` : ''}
-                </div>
-            `).join('');
-        }
-
-        // UI Tabs & Modals
-        function switchTab(tab) {
-            document.querySelectorAll('.view-panel').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`view-${tab}`).classList.remove('hidden');
-            if (tab === 'ownerPanel') renderOwnerPanel();
-        }
-
-        function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
-        function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); }
-        function openAddProductModal() { document.getElementById('productModal').classList.remove('hidden'); }
-        function closeAddProductModal() { document.getElementById('productModal').classList.add('hidden'); }
-        function openCartModal() { renderCart(); document.getElementById('cartModal').classList.remove('hidden'); }
-        function closeCartModal() { document.getElementById('cartModal').classList.add('hidden'); }
-
-        function toggleAuthMode() {
-            isRegisterMode = !isRegisterMode;
-            document.getElementById('authTitle').innerText = isRegisterMode ? "Ro'yxatdan O'tish" : "Tizimga Kirish";
-            document.getElementById('authToggleBtn').innerText = isRegisterMode ? "Tizimga kirish" : "Ro'yxatdan o'tish";
-        }
-    </script>
+  <script src="app.js"></script>
 </body>
 </html>
