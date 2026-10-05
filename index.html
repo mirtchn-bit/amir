@@ -55,12 +55,12 @@
 
         let app, db, auth;
         let currentUser = null;
-        let registeredUser = null; // Profile stored in localStorage
+        let registeredUser = null; 
         let products = [];
         let orders = [];
         let cart = [];
         let wishlist = [];
-        let activeTab = 'store'; // 'store', 'wishlist', 'userOrders', 'admin'
+        let activeTab = 'store'; 
         let currentCategory = 'all';
         let searchQuery = '';
         let isAdminAuthenticated = false;
@@ -139,6 +139,13 @@
                 } else {
                     await signInAnonymously(auth);
                 }
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        currentUser = user;
+                        subscribeToFirestore();
+                    }
+                });
 
                 // Load saved cart & wishlist
                 const localCart = localStorage.getItem('optom_cart') || localStorage.getItem('luxe_cart');
@@ -403,7 +410,7 @@
             let filtered = products.filter(p => {
                 const matchesCat = currentCategory === 'all' || p.category === currentCategory;
                 const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                                      p.description.toLowerCase().includes(searchQuery.toLowerCase());
+                                      (p.description && p.description.toLowerCase().includes(searchQuery.toLowerCase()));
                 return matchesCat && matchesSearch;
             });
 
@@ -425,7 +432,7 @@
                 return `
                 <div class="group relative bg-slate-900/70 border border-slate-800 hover:border-brand-500/50 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-brand-500/10 flex flex-col">
                     <div class="relative aspect-4/3 w-full overflow-hidden bg-slate-800">
-                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/600x400/1e293b/ffffff?text=Luxe+Store'">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/600x400/1e293b/ffffff?text=Optom+Market'">
                         <button onclick="toggleWishlist('${product.id}')" class="absolute top-3 right-3 w-10 h-10 rounded-full glass flex items-center justify-center text-slate-300 hover:text-rose-500 transition-colors z-10">
                             <i class="${isWished ? 'fa-solid text-rose-500' : 'fa-regular'} fa-heart text-lg"></i>
                         </button>
@@ -437,7 +444,7 @@
                         <div>
                             <div class="text-xs font-semibold uppercase tracking-wider text-brand-500 mb-1">${product.category}</div>
                             <h3 class="font-bold text-base text-slate-100 group-hover:text-brand-500 transition-colors line-clamp-1">${product.name}</h3>
-                            <p class="text-xs text-slate-400 mt-1 line-clamp-2">${product.description}</p>
+                            <p class="text-xs text-slate-400 mt-1 line-clamp-2">${product.description || ''}</p>
                         </div>
 
                         <div class="mt-4 pt-4 border-t border-slate-800">
