@@ -3,1162 +3,1324 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APEX SHOP — Katalog & Admin</title>
+    <title>APEX SHOP — Global Marketplace & Cargo</title>
     <style>
         :root {
-            --bg-dark: #0a0a0c;
-            --card-bg: #141418;
-            --neon-red: #ff0033;
-            --dark-red: #99001f;
-            --text-light: #ffffff;
-            --text-muted: #9e9ea7;
-            --border-color: #2a2a32;
+            --bg-dark: #090d16;
+            --card-bg: #111827;
+            --accent-cyan: #00d4ff;
+            --accent-emerald: #10b981;
+            --accent-indigo: #3b82f6;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --border: #1f2937;
         }
 
         * {
             box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Inter, Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
         }
 
         body {
             background-color: var(--bg-dark);
-            color: var(--text-light);
-            padding: 20px;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+
+        .top-promo {
+            background: linear-gradient(90deg, #0b192c, #0f2942, #0b192c);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 8px 16px;
+            text-align: center;
+            font-size: 12px;
+            letter-spacing: 0.6px;
+            color: #bae6fd;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
+            padding: 18px 20px 0;
         }
 
-        /* Header */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 15px;
-            background: linear-gradient(135deg, #16161a 0%, #1f050a 100%);
-            border: 1px solid var(--neon-red);
-            box-shadow: 0 0 20px rgba(255, 0, 51, 0.25);
-            padding: 18px 25px;
+            gap: 14px;
+            background: rgba(17, 24, 39, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+            padding: 16px 22px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            position: sticky;
+            top: 10px;
+            z-index: 500;
+        }
+
+        .brand-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-mark {
+            width: 42px;
+            height: 42px;
             border-radius: 12px;
-            margin-bottom: 30px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 20px;
+            color: #06101d;
+            box-shadow: 0 0 18px rgba(0, 212, 255, 0.45);
         }
 
         header h1 {
-            font-size: 26px;
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
+            font-size: 22px;
+            letter-spacing: 2px;
             font-weight: 900;
         }
 
         header h1 span {
-            color: var(--neon-red);
-            text-shadow: 0 0 12px rgba(255, 0, 51, 0.8);
+            color: var(--accent-cyan);
         }
 
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
-        .user-badge {
-            background: #1f1f26;
-            border: 1px solid var(--border-color);
-            padding: 8px 14px;
-            border-radius: 8px;
+        .acc-chip {
+            background: #0f172a;
+            border: 1px solid rgba(0, 212, 255, 0.35);
+            padding: 8px 13px;
+            border-radius: 10px;
+            font-size: 12px;
+            display: none;
+        }
+
+        .acc-chip b {
+            color: var(--accent-cyan);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-weight: 700;
             font-size: 13px;
-            color: var(--text-light);
+            cursor: pointer;
+            transition: 0.25s;
         }
 
-        .user-badge b {
-            color: var(--neon-red);
+        .tab-btn.active, .tab-btn:hover {
+            color: #fff;
+            border-color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.12);
         }
 
-        /* Tugmalar */
         button {
             cursor: pointer;
             border: none;
-            padding: 11px 18px;
-            border-radius: 8px;
+            padding: 10px 16px;
+            border-radius: 10px;
             font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            font-size: 13px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-admin {
-            background: var(--neon-red);
-            color: white;
-            box-shadow: 0 0 15px rgba(255, 0, 51, 0.5);
-        }
-
-        .btn-admin:hover {
-            background: #ff1a47;
-            box-shadow: 0 0 25px rgba(255, 0, 51, 0.9);
-            transform: translateY(-2px);
-        }
-
-        .btn-reg {
-            background: transparent;
-            border: 1px solid var(--neon-red);
-            color: var(--text-light);
-        }
-
-        .btn-reg:hover {
-            background: rgba(255, 0, 51, 0.15);
-        }
-
-        .btn-order {
-            background: linear-gradient(90deg, var(--neon-red), var(--dark-red));
-            color: white;
-            width: 100%;
-            margin-top: 12px;
-            padding: 10px;
+            letter-spacing: 0.5px;
             font-size: 12px;
+            text-transform: uppercase;
+            transition: all 0.25s ease;
         }
 
-        .btn-order:hover {
-            box-shadow: 0 0 16px rgba(255, 0, 51, 0.65);
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
+            color: #06101d;
+            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.3);
         }
 
-        .btn-add {
-            background: linear-gradient(90deg, var(--neon-red), var(--dark-red));
-            color: white;
-            width: 100%;
-            font-size: 15px;
-            margin-top: 10px;
-            padding: 14px;
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 22px rgba(0, 212, 255, 0.55);
         }
 
-        .btn-add:hover {
-            box-shadow: 0 0 25px rgba(255, 0, 51, 0.7);
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: #fff;
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.1);
         }
 
         .btn-del {
             background: transparent;
-            border: 1px solid var(--neon-red);
-            color: var(--neon-red);
-            padding: 7px 12px;
-            font-size: 11px;
-            margin-top: 8px;
+            border: 1px solid rgba(148, 163, 184, 0.45);
+            color: #cbd5e1;
             width: 100%;
+            margin-top: 8px;
+            padding: 7px;
+            font-size: 11px;
         }
 
         .btn-del:hover {
-            background: var(--neon-red);
-            color: white;
+            background: #334155;
+            color: #fff;
         }
 
-        /* Modal oyna */
         .modal-overlay {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(5px);
+            inset: 0;
+            background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(6px);
             z-index: 1000;
             justify-content: center;
             align-items: center;
-            padding: 15px;
+            padding: 16px;
         }
 
         .modal-box {
             background: var(--card-bg);
-            border: 2px solid var(--neon-red);
-            box-shadow: 0 0 35px rgba(255, 0, 51, 0.35);
+            border: 1.5px solid var(--accent-cyan);
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.25);
             width: 100%;
-            max-width: 450px;
-            padding: 28px;
-            border-radius: 14px;
+            max-width: 460px;
+            padding: 26px;
+            border-radius: 16px;
             position: relative;
         }
 
         .modal-close {
             position: absolute;
-            top: 15px;
+            top: 14px;
             right: 18px;
-            font-size: 22px;
+            font-size: 24px;
             color: var(--text-muted);
             cursor: pointer;
         }
 
         .modal-close:hover {
-            color: var(--neon-red);
+            color: var(--accent-cyan);
         }
 
         .modal-box h2 {
-            color: var(--neon-red);
+            color: var(--accent-cyan);
+            font-size: 19px;
+            margin-bottom: 6px;
             text-transform: uppercase;
-            margin-bottom: 8px;
-            font-size: 20px;
         }
 
         .modal-box p {
             color: var(--text-muted);
             font-size: 13px;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
 
-        .phone-input-group {
-            display: flex;
-            align-items: center;
-            background: #0d0d10;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            margin-bottom: 12px;
-            overflow: hidden;
-        }
-
-        .phone-input-group:focus-within {
-            border-color: var(--neon-red);
-            box-shadow: 0 0 8px rgba(255, 0, 51, 0.3);
-        }
-
-        .phone-prefix {
-            padding: 12px 14px;
-            background: #1a1a20;
-            color: var(--neon-red);
-            font-weight: 800;
-            border-right: 1px solid var(--border-color);
-        }
-
-        .phone-input-group input {
-            border: none;
-            margin-bottom: 0;
-            box-shadow: none !important;
-        }
-
-        .error-msg {
-            color: #ff4d4d;
-            font-size: 12px;
-            margin-bottom: 12px;
-            display: none;
-            background: rgba(255, 0, 51, 0.1);
-            padding: 8px 10px;
-            border-radius: 6px;
-            border-left: 3px solid var(--neon-red);
-        }
-
-        /* Zakaz oynasidagi kargo tanlovi */
-        .cargo-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 12px 0 16px;
-        }
-
-        .cargo-option-btn {
-            background: #0d0d10;
-            border: 1px solid var(--border-color);
-            color: var(--text-light);
-            padding: 12px;
-            border-radius: 8px;
-            text-align: left;
-            cursor: pointer;
-            transition: 0.25s;
-        }
-
-        .cargo-option-btn.active {
-            border-color: var(--neon-red);
-            background: rgba(255, 0, 51, 0.16);
-            box-shadow: 0 0 12px rgba(255, 0, 51, 0.35);
-        }
-
-        .cargo-option-btn span {
-            display: block;
-            font-size: 13px;
-            font-weight: 800;
-            color: var(--neon-red);
-            text-transform: uppercase;
-        }
-
-        .cargo-option-btn small {
-            display: block;
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        .order-summary-box {
-            background: #0d0d10;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 14px;
-            margin-bottom: 14px;
-            font-size: 13px;
-            line-height: 1.7;
-        }
-
-        .order-summary-box .total-row {
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px solid var(--border-color);
-            font-size: 16px;
-            font-weight: 900;
-            color: var(--neon-red);
-        }
-
-        /* Admin Panel */
-        #admin-panel {
-            display: none;
-            background: var(--card-bg);
-            border: 2px solid var(--neon-red);
-            box-shadow: 0 0 30px rgba(255, 0, 51, 0.25);
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 35px;
-        }
-
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-
-        .admin-header h2 {
-            color: var(--neon-red);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Kurs va Yer/Avia kargo sozlamalari */
-        .rates-bar {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 15px;
-            background: #1a090d;
-            border: 1px solid rgba(255, 0, 51, 0.45);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .rate-field label {
-            display: block;
-            font-size: 12px;
-            color: #ffb3c1;
-            margin-bottom: 6px;
-            font-weight: bold;
-        }
-
-        .rate-field input {
-            margin-bottom: 0;
-            background: #0a0a0c;
-        }
-
-        /* Hisoblovchi bo'lim */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .stat-box {
-            background: #0d0d10;
-            border-left: 4px solid var(--neon-red);
-            padding: 15px 20px;
-            border-radius: 8px;
-        }
-
-        .stat-box span {
-            display: block;
-            font-size: 12px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-
-        .stat-box strong {
-            font-size: 20px;
-            color: var(--text-light);
-            font-weight: 900;
-        }
-
-        .stat-box.highlight strong {
-            color: var(--neon-red);
-        }
-
-        /* Yangi mahsulot qo'shish bo'limi */
-        .add-product-box {
-            background: #0d0d10;
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        .add-product-box h3 {
-            color: var(--text-light);
-            font-size: 16px;
-            text-transform: uppercase;
-            margin-bottom: 15px;
-            border-left: 3px solid var(--neon-red);
-            padding-left: 10px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
-            gap: 12px;
-        }
-
-        .live-calc-preview {
-            background: #141418;
-            border: 1px dashed var(--neon-red);
-            border-radius: 8px;
-            padding: 14px;
-            margin: 8px 0 12px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 10px;
-            font-size: 13px;
-        }
-
-        .live-calc-preview div b {
-            color: var(--neon-red);
-            font-size: 14px;
-        }
-
-        input {
+        input, select, textarea {
             width: 100%;
-            padding: 12px 15px;
-            background: #141418;
-            border: 1px solid var(--border-color);
-            color: white;
-            border-radius: 8px;
-            font-size: 14px;
+            padding: 11px 14px;
+            background: #0b1120;
+            border: 1px solid var(--border);
+            color: #fff;
+            border-radius: 10px;
+            font-size: 13px;
             outline: none;
             margin-bottom: 10px;
         }
 
-        input:focus {
-            border-color: var(--neon-red);
-            box-shadow: 0 0 8px rgba(255, 0, 51, 0.3);
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.25);
         }
 
-        .file-upload-label {
-            display: block;
-            padding: 12px 15px;
-            background: #141418;
-            border: 1px dashed var(--neon-red);
-            color: var(--text-muted);
+        .phone-wrap {
+            display: flex;
+            align-items: center;
+            background: #0b1120;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .phone-wrap:focus-within {
+            border-color: var(--accent-cyan);
+        }
+
+        .phone-code {
+            padding: 11px 13px;
+            background: #172033;
+            color: var(--accent-cyan);
+            font-weight: 800;
+            border-right: 1px solid var(--border);
+        }
+
+        .phone-wrap input {
+            border: none;
+            margin: 0;
+        }
+
+        .error-box {
+            display: none;
+            background: rgba(59, 130, 246, 0.14);
+            border-left: 3px solid var(--accent-cyan);
+            color: #bae6fd;
+            padding: 9px 12px;
             border-radius: 8px;
-            font-size: 13px;
-            text-align: center;
-            cursor: pointer;
-            margin-bottom: 10px;
-            transition: 0.3s;
-        }
-
-        .file-upload-label:hover {
-            background: rgba(255, 0, 51, 0.1);
-            color: white;
-        }
-
-        /* Zakazlar va Mijozlar ro'yxati */
-        .admin-lists-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .list-box h3 {
-            font-size: 14px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .list-item {
-            background: #0d0d10;
-            padding: 10px 14px;
-            border-radius: 6px;
-            margin-bottom: 8px;
             font-size: 12px;
-            border-left: 2px solid var(--neon-red);
-            line-height: 1.5;
+            margin-bottom: 12px;
         }
 
-        /* Mahsulotlar vitrinasi */
-        .section-title {
-            font-size: 20px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--neon-red);
-            padding-left: 12px;
-            letter-spacing: 1px;
+        .cargo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 8px 0 14px;
+        }
+
+        .cargo-card {
+            background: #0b1120;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .cargo-card.active {
+            border-color: var(--accent-emerald);
+            background: rgba(16, 185, 129, 0.14);
+        }
+
+        .cargo-card strong {
+            display: block;
+            font-size: 13px;
+            color: #fff;
+        }
+
+        .cargo-card span {
+            display: block;
+            font-size: 11px;
+            color: var(--accent-emerald);
+            margin-top: 3px;
+            font-weight: 700;
+        }
+
+        .summary-panel {
+            background: #0b1120;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 13px;
+            line-height: 1.7;
+            margin-bottom: 14px;
+        }
+
+        .summary-total {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--accent-cyan);
         }
 
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
-            gap: 22px;
+            gap: 20px;
         }
 
-        .card {
+        .product-card {
             background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: 0.25s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0, 212, 255, 0.18);
+        }
+
+        .img-box {
             position: relative;
+            height: 215px;
+            background: #0b1120;
+            overflow: hidden;
         }
 
-        .card:hover {
-            border-color: var(--neon-red);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(255, 0, 51, 0.25);
+        .img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
-        .card-badge {
+        .tag-pill {
             position: absolute;
             top: 10px;
-            right: 10px;
-            background: var(--neon-red);
-            color: white;
-            font-size: 11px;
-            font-weight: bold;
-            padding: 4px 8px;
-            border-radius: 4px;
+            left: 10px;
+            background: rgba(9, 13, 22, 0.82);
+            border: 1px solid rgba(0, 212, 255, 0.55);
+            color: #e0f2fe;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 9px;
+            border-radius: 999px;
             text-transform: uppercase;
         }
 
-        .card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-bottom: 1px solid var(--border-color);
+        .admin-photo-badge {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: var(--accent-emerald);
+            color: #052e16;
+            font-size: 10px;
+            font-weight: 900;
+            padding: 3px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
         }
 
-        .card-body {
+        .card-content {
             padding: 15px;
         }
 
-        .card h3 {
-            font-size: 18px;
-            margin-bottom: 8px;
+        .card-title {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 6px;
         }
 
-        .card-base-label {
+        .price-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .price-main {
+            color: var(--accent-cyan);
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .weight-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        #orders-view {
+            display: none;
+        }
+
+        .order-track-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 14px;
+        }
+
+        .order-top {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .status-badge {
+            padding: 5px 11px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            background: rgba(0, 212, 255, 0.14);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(0, 212, 255, 0.4);
+        }
+
+        .steps-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin: 12px 0;
+        }
+
+        .step-seg {
+            height: 6px;
+            border-radius: 99px;
+            background: #1e293b;
+        }
+
+        .step-seg.done {
+            background: var(--accent-emerald);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.45);
+        }
+
+        .admin-note-box {
+            background: #0b1120;
+            border-left: 3px solid var(--accent-cyan);
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #e2e8f0;
+            margin-top: 10px;
+        }
+
+        #admin-panel {
+            display: none;
+            background: var(--card-bg);
+            border: 1.5px solid var(--accent-cyan);
+            box-shadow: 0 0 35px rgba(0, 212, 255, 0.18);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 28px;
+        }
+
+        .rates-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            background: #0c192e;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #0b1120;
+            border-left: 3px solid var(--accent-cyan);
+            padding: 14px;
+            border-radius: 10px;
+        }
+
+        .stat-card span {
+            display: block;
             font-size: 11px;
             color: var(--text-muted);
             text-transform: uppercase;
         }
 
-        .card-price {
-            color: var(--neon-red);
-            font-weight: 900;
-            font-size: 19px;
-            margin-top: 2px;
-        }
-
-        .card-weight-hint {
-            font-size: 12px;
-            color: var(--text-muted);
+        .stat-card strong {
+            display: block;
+            font-size: 18px;
             margin-top: 4px;
+            font-weight: 900;
         }
 
-        .admin-card-info {
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid var(--border-color);
-            font-size: 12px;
+        .admin-form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 10px;
+        }
+
+        .file-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 11px;
+            border: 1px dashed var(--accent-cyan);
+            border-radius: 10px;
+            background: #0b1120;
             color: var(--text-muted);
-            line-height: 1.6;
+            font-size: 12px;
+            cursor: pointer;
+            margin-bottom: 10px;
         }
 
-        .admin-card-info b {
-            color: var(--text-light);
+        .photo-preview-strip {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            background: #0f172a;
+            border: 1px solid rgba(0, 212, 255, 0.35);
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .photo-preview-strip img {
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--accent-cyan);
+        }
+
+        .admin-orders-list {
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+        }
+
+        .admin-order-item {
+            background: #0b1120;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+
+        .client-acc-pill {
+            display: inline-block;
+            background: rgba(0, 212, 255, 0.12);
+            border: 1px solid rgba(0, 212, 255, 0.35);
+            color: #7dd3fc;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            margin: 4px 0 8px;
+        }
+
+        .admin-order-controls {
+            display: grid;
+            grid-template-columns: 1fr 2fr auto;
+            gap: 10px;
+            margin-top: 8px;
+            align-items: center;
+        }
+
+        .admin-order-controls input,
+        .admin-order-controls select {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 700px) {
+            .admin-order-controls {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
 
+<div class="top-promo">
+    ⚡ <b>APEX SHOP</b> — Global Katalog &amp; iPost Kargo | Xitoydan Yer va Avia yetkazib berish tizimi
+</div>
+
 <div class="container">
     <header>
-        <h1>APEX <span>SHOP</span></h1>
+        <div class="brand-wrap">
+            <div class="logo-mark">A</div>
+            <div>
+                <h1>APEX <span>SHOP</span></h1>
+            </div>
+        </div>
+
         <div class="header-actions">
-            <div id="user-display" class="user-badge" style="display: none;"></div>
-            <button class="btn-reg" id="reg-btn" onclick="openRegModal()">Ro'yxatdan o'tish</button>
-            <button class="btn-admin" id="admin-btn" onclick="handleAdminBtn()">Admin Panel</button>
+            <div id="user-acc-chip" class="acc-chip"></div>
+            <button class="btn-ghost" id="auth-btn" onclick="openAuthModal()">Kirish / Ro'yxat</button>
+            <button class="btn-primary" id="admin-toggle-btn" onclick="handleAdminClick()">Admin Panel</button>
         </div>
     </header>
 
-    <!-- REGISTRATSIYA OYNASI -->
-    <div class="modal-overlay" id="reg-modal">
+    <div class="nav-tabs">
+        <button class="tab-btn active" id="tab-catalog" onclick="switchView('catalog')">🛍️ Mahsulotlar Katalogi</button>
+        <button class="tab-btn" id="tab-orders" onclick="switchView('orders')">📦 Buyurtmalarim &amp; Kargo Holati (<span id="my-orders-count">0</span>)</button>
+    </div>
+
+    <div class="modal-overlay" id="auth-modal">
         <div class="modal-box">
             <span class="modal-close" onclick="closeModals()">&times;</span>
-            <h2>Ro'yxatdan o'tish</h2>
-            <p>APEX SHOP mijozlar bazasiga qo'shilish uchun ismingiz va amaldagi raqamingizni kiriting.</p>
-            
-            <input type="text" id="reg-name" placeholder="Ismingiz (masalan: Sardor)">
-            
-            <div class="phone-input-group">
-                <span class="phone-prefix">+998</span>
-                <input type="tel" id="reg-phone" maxlength="9" placeholder="90 123 45 67" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            <h2>Mijoz Akkaunti</h2>
+            <p>Buyurtmalarni kuzatish va zakaz berish uchun ism va haqiqiy O'zbekiston raqamingizni kiriting.</p>
+
+            <input type="text" id="auth-name" placeholder="Ismingiz (masalan: Sardorbek)">
+            <div class="phone-wrap">
+                <span class="phone-code">+998</span>
+                <input type="tel" id="auth-phone" maxlength="9" placeholder="90 123 45 67" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
             </div>
 
-            <div class="error-msg" id="reg-error"></div>
-            <button class="btn-add" onclick="registerUser()">Tasdiqlash</button>
+            <div class="error-box" id="auth-error"></div>
+            <button class="btn-primary" style="width: 100%; padding: 12px;" onclick="saveCustomerAccount()">Akkauntga Kirish</button>
         </div>
     </div>
 
-    <!-- ADMIN PAROL OYNASI -->
-    <div class="modal-overlay" id="admin-modal">
+    <div class="modal-overlay" id="admin-pass-modal">
         <div class="modal-box">
             <span class="modal-close" onclick="closeModals()">&times;</span>
             <h2>Admin Kirish</h2>
-            <p>Boshqaruv panelini ochish uchun maxfiy parolni kiriting.</p>
-            <input type="password" id="admin-pass-input" placeholder="Parolni tering...">
-            <div class="error-msg" id="admin-error"></div>
-            <button class="btn-add" onclick="verifyAdmin()">Kirish</button>
+            <p>Boshqaruv paneli, kargo tariflari va mijozlar zakazlariga kirish uchun parolni tering.</p>
+            <input type="password" id="admin-pass-input" placeholder="Maxfiy parol...">
+            <div class="error-box" id="admin-pass-error"></div>
+            <button class="btn-primary" style="width: 100%; padding: 12px;" onclick="checkAdminPassword()">Kirish</button>
         </div>
     </div>
 
-    <!-- ZAKAZ BERISH OYNASI (YER / AVIA KARGO TANLOVI) -->
     <div class="modal-overlay" id="order-modal">
         <div class="modal-box">
             <span class="modal-close" onclick="closeModals()">&times;</span>
-            <h2>Zakaz Berish</h2>
-            <p id="order-prod-title" style="color: #fff; font-weight: bold; margin-bottom: 10px;"></p>
+            <h2>Buyurtma Rasmiylashtirish</h2>
+            <p id="order-item-title" style="color: #fff; font-weight: 700;"></p>
 
-            <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px;">Nechta dona olasiz:</label>
-            <input type="number" id="order-qty" value="1" min="1" oninput="updateOrderCalc()">
+            <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 4px;">Miqdori (dona):</label>
+            <input type="number" id="order-qty" value="1" min="1" oninput="recalcOrderModal()">
 
-            <label style="font-size: 12px; color: var(--text-muted); display: block;">Kargo turini tanlang (iPost):</label>
-            <div class="cargo-options">
-                <div class="cargo-option-btn active" id="opt-land" onclick="selectCargoType('land')">
-                    <span>🚛 Yer Kargo</span>
-                    <small id="land-rate-text"></small>
+            <label style="font-size: 12px; color: var(--text-muted); display: block;">Yetkazib berish (iPost Kargo):</label>
+            <div class="cargo-grid">
+                <div class="cargo-card active" id="cargo-card-land" onclick="pickCargo('land')">
+                    <strong>🚛 Yer Kargo</strong>
+                    <span id="cargo-land-price">0 so'm / kg</span>
                 </div>
-                <div class="cargo-option-btn" id="opt-avia" onclick="selectCargoType('avia')">
-                    <span>✈️ Avia Kargo</span>
-                    <small id="avia-rate-text"></small>
+                <div class="cargo-card" id="cargo-card-avia" onclick="pickCargo('avia')">
+                    <strong>✈️ Avia Kargo</strong>
+                    <span id="cargo-avia-price">0 so'm / kg</span>
                 </div>
             </div>
 
-            <div class="order-summary-box">
-                <div>Mahsulot asl narxi (jami): <b id="ord-base-sum">0 so'm</b></div>
-                <div>Umumiy vazn: <b id="ord-weight-sum">0 kg</b></div>
-                <div>Kargo narxi: <b id="ord-cargo-sum">0 so'm</b></div>
-                <div class="total-row">Jami to'lov: <span id="ord-final-sum">0 so'm</span></div>
+            <div class="summary-panel">
+                <div>Asl narxi (jami): <b id="sum-base">0 so'm</b></div>
+                <div>Umumiy vazn: <b id="sum-weight">0 kg</b></div>
+                <div>Tanlangan kargo narxi: <b id="sum-cargo">0 so'm</b></div>
+                <div class="summary-total">
+                    <span>Jami hisob:</span>
+                    <span id="sum-final">0 so'm</span>
+                </div>
             </div>
 
-            <div class="error-msg" id="order-error"></div>
-            <button class="btn-add" onclick="submitOrder()">Zakazni Tasdiqlash</button>
+            <div class="error-box" id="order-error"></div>
+            <button class="btn-primary" style="width: 100%; padding: 13px;" onclick="placeOrder()">Buyurtma Berish</button>
         </div>
     </div>
 
-    <!-- FAQAT ADMIN PANEL -->
-    <div id="admin-panel">
-        <div class="admin-header">
-            <h2>⚡ APEX SHOP — Admin, Kurs & iPost Kargo</h2>
-            <span style="color: var(--neon-red); font-size: 13px; font-weight: bold;">● ADMIN REJIM FAOL</span>
+    <section id="admin-panel">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 16px;">
+            <h2 style="color: var(--accent-cyan); font-size: 18px; text-transform: uppercase;">⚡ APEX ADMIN — Tariflar, Tovarlar &amp; Zakazlar</h2>
+            <span style="font-size: 12px; color: var(--accent-emerald); font-weight: 700;">● ADMIN FAOL</span>
         </div>
 
-        <!-- Kurs va Yer/Avia kargo tariflari -->
-        <div class="rates-bar">
-            <div class="rate-field">
-                <label for="yuan-rate">1 Xitoy yuani (¥) kursi (so'mda):</label>
-                <input type="number" id="yuan-rate" value="1800" oninput="updateRatesAndPreview()">
+        <div class="rates-row">
+            <div>
+                <label style="font-size: 11px; color: #bae6fd; display: block; margin-bottom: 5px;">1 Yuan (¥) kursi (so'm):</label>
+                <input type="number" id="rate-yuan" value="1800" oninput="onSettingsChange()" style="margin-bottom: 0;">
             </div>
-            <div class="rate-field">
-                <label for="land-cargo-kg">1 kg YER KARGO narxi (so'mda):</label>
-                <input type="number" id="land-cargo-kg" value="35000" oninput="updateRatesAndPreview()">
+            <div>
+                <label style="font-size: 11px; color: #bae6fd; display: block; margin-bottom: 5px;">1 kg YER KARGO (so'm):</label>
+                <input type="number" id="rate-land" value="35000" oninput="onSettingsChange()" style="margin-bottom: 0;">
             </div>
-            <div class="rate-field">
-                <label for="avia-cargo-kg">1 kg AVIA KARGO narxi (so'mda):</label>
-                <input type="number" id="avia-cargo-kg" value="95000" oninput="updateRatesAndPreview()">
-            </div>
-        </div>
-
-        <!-- Umumiy Hisoblovchi bo'lim -->
-        <div class="stats-grid">
-            <div class="stat-box">
-                <span>Tovar turlari / Soni</span>
-                <strong id="stat-types-count">0 xil (0 dona)</strong>
-            </div>
-            <div class="stat-box">
-                <span>Asl narxlar jami (so'mda)</span>
-                <strong id="stat-goods-sum">0 so'm</strong>
-            </div>
-            <div class="stat-box">
-                <span>Yer kargo (jami vazn bo'yicha)</span>
-                <strong id="stat-land-sum">0 so'm</strong>
-            </div>
-            <div class="stat-box highlight">
-                <span>Avia kargo (jami vazn bo'yicha)</span>
-                <strong id="stat-avia-sum">0 so'm</strong>
+            <div>
+                <label style="font-size: 11px; color: #bae6fd; display: block; margin-bottom: 5px;">1 kg AVIA KARGO (so'm):</label>
+                <input type="number" id="rate-avia" value="95000" oninput="onSettingsChange()" style="margin-bottom: 0;">
             </div>
         </div>
 
-        <!-- Yangi mahsulot qo'shish formasi -->
-        <div class="add-product-box">
-            <h3>+ Yangi mahsulot qo'shish (Xitoy narxi -> Asl so'm narx)</h3>
-            <div class="form-grid">
-                <input type="text" id="prod-name" placeholder="Mahsulot nomi">
-                <input type="number" step="0.01" id="prod-yuan" placeholder="Xitoy narxi (¥, masalan: 25)" oninput="updateRatesAndPreview()">
-                <input type="number" step="0.01" id="prod-weight" placeholder="1 donasi vazni (kg, masalan: 0.4)" oninput="updateRatesAndPreview()">
-                <input type="number" id="prod-qty" placeholder="Nechta dona (masalan: 10)" oninput="updateRatesAndPreview()">
+        <div class="stats-row">
+            <div class="stat-card">
+                <span>Tovarlar / Soni</span>
+                <strong id="adm-stat-count">0 xil (0 dona)</strong>
             </div>
-
-            <!-- Jonli hisob-kitob ko'rinishi -->
-            <div class="live-calc-preview">
-                <div>1 dona asl narxi: <b id="prev-unit-som">0 so'm</b></div>
-                <div>Yer kargo (jami): <b id="prev-land-som">0 so'm</b></div>
-                <div>Avia kargo (jami): <b id="prev-avia-som">0 so'm</b></div>
+            <div class="stat-card">
+                <span>Asl narxlar jami</span>
+                <strong id="adm-stat-base">0 so'm</strong>
             </div>
-
-            <div class="form-grid">
-                <input type="text" id="prod-img-url" placeholder="Rasm havolasi (URL) yoki pastdan fayl tanlang">
-                <label class="file-upload-label" for="prod-img-file" id="file-label">
-                    📁 Qurilmadan rasm yuklash (ixtiyoriy)
-                </label>
-                <input type="file" id="prod-img-file" accept="image/*" style="display: none;" onchange="handleFileSelect(this)">
+            <div class="stat-card">
+                <span>Yer kargo jami</span>
+                <strong id="adm-stat-land">0 so'm</strong>
             </div>
-            <button class="btn-add" onclick="addProduct()">Asl Narxda Katalogga Qo'shish</button>
-        </div>
-
-        <!-- Zakazlar va Mijozlar ro'yxati -->
-        <div class="admin-lists-grid">
-            <div class="list-box">
-                <h3>Tushgan zakazlar (<span id="orders-count">0</span>)</h3>
-                <div id="orders-list"></div>
-            </div>
-            <div class="list-box">
-                <h3>Ro'yxatdan o'tgan mijozlar (<span id="users-count">0</span>)</h3>
-                <div id="registered-users-list"></div>
+            <div class="stat-card">
+                <span>Avia kargo jami</span>
+                <strong id="adm-stat-avia">0 so'm</strong>
             </div>
         </div>
-    </div>
 
-    <!-- Mijozlarga ko'rinadigan vitrina -->
-    <h2 class="section-title">Mahsulotlar Katalogi</h2>
-    <div class="products-grid" id="products-list"></div>
+        <div style="background: #0b1120; border: 1px solid var(--border); border-radius: 12px; padding: 16px;">
+            <h3 style="font-size: 14px; margin-bottom: 12px; text-transform: uppercase;">+ Yangi mahsulot qo'shish (Admin rasmi bilan)</h3>
+            <div class="admin-form-grid">
+                <input type="text" id="new-prod-name" placeholder="Mahsulot nomi">
+                <input type="number" step="0.01" id="new-prod-yuan" placeholder="Xitoy narxi (¥)" oninput="updateAdminPreview()">
+                <input type="number" step="0.01" id="new-prod-weight" placeholder="1 dona vazni (kg)" oninput="updateAdminPreview()">
+                <input type="number" id="new-prod-qty" placeholder="Soni (dona)" oninput="updateAdminPreview()">
+            </div>
+
+            <div style="background: #111827; border: 1px dashed rgba(0,212,255,0.45); border-radius: 10px; padding: 10px 14px; margin: 4px 0 10px; font-size: 12px; display: flex; flex-wrap: wrap; gap: 16px;">
+                <div>Asl narxi (1 dona): <b id="prev-base-one" style="color: var(--accent-cyan);">0 so'm</b></div>
+                <div>Yer kargo: <b id="prev-land-all" style="color: var(--accent-emerald);">0 so'm</b></div>
+                <div>Avia kargo: <b id="prev-avia-all" style="color: var(--accent-cyan);">0 so'm</b></div>
+            </div>
+
+            <div class="admin-form-grid">
+                <input type="text" id="new-prod-url" placeholder="Rasm havolasi (URL, ixtiyoriy)" oninput="onUrlInputChange()">
+                <label class="file-btn" for="new-prod-file" id="new-file-label">📸 Admin rasmini yuklash (Galereya/Fayl)</label>
+                <input type="file" id="new-prod-file" accept="image/*" style="display: none;" onchange="readUploadedPhoto(this)">
+            </div>
+
+            <div class="photo-preview-strip" id="photo-preview-strip">
+                <img id="photo-preview-img" src="" alt="Admin rasm ko'rinishi">
+                <div style="font-size: 12px;">
+                    <b style="color: var(--accent-emerald);">ADMIN RASM TAYYOR</b><br>
+                    <span id="photo-preview-status" style="color: var(--text-muted);">Katalogda aniq ko'rinadi</span>
+                </div>
+            </div>
+
+            <button class="btn-primary" style="width: 100%; padding: 12px;" onclick="addNewProduct()">Admin Rasmi Bilan Qo'shish</button>
+        </div>
+
+        <div class="admin-orders-list">
+            <h3 style="font-size: 15px; margin-bottom: 12px; color: var(--accent-cyan); text-transform: uppercase;">
+                📋 Mijozlar Buyurtmalari, Akkauntlari va Izohlar (<span id="adm-orders-total">0</span>)
+            </h3>
+            <div id="admin-orders-container"></div>
+        </div>
+    </section>
+
+    <section id="catalog-view">
+        <div class="products-grid" id="products-grid"></div>
+    </section>
+
+    <section id="orders-view">
+        <div id="client-orders-container"></div>
+    </section>
 </div>
 
 <script>
-    let isAdmin = false;
-    let uploadedBase64Image = "";
-    let activeOrderIndex = null;
-    let selectedCargo = 'land';
-    const _0x1a = "YW1pcjIwMTEwMQ==";
-
-    const validPrefixes = ['90', '91', '93', '94', '95', '97', '98', '99', '88', '77', '50', '33', '20'];
-
-    let settings = JSON.parse(localStorage.getItem('apexShopSettings')) || {
-        yuanRate: 1800,
-        landCargoKg: 35000,
-        aviaCargoKg: 95000
-    };
-
-    document.getElementById('yuan-rate').value = settings.yuanRate;
-    document.getElementById('land-cargo-kg').value = settings.landCargoKg;
-    document.getElementById('avia-cargo-kg').value = settings.aviaCargoKg;
-
-    let products = JSON.parse(localStorage.getItem('apexShopProducts')) || [
-        { name: "APEX Sportivniy Kastyum", yuan: 85, weightKg: 0.7, qty: 5, img: "https://via.placeholder.com/300x200/141418/ff0033?text=APEX+SUIT" },
-        { name: "APEX VIP Parfum", yuan: 42, weightKg: 0.3, qty: 10, img: "https://via.placeholder.com/300x200/141418/ff0033?text=APEX+PARFUM" }
+    const _sec = "YW1pcjIwMTEwMQ==";
+    const opCodes = ['90', '91', '93', '94', '95', '97', '98', '99', '88', '77', '50', '33', '20'];
+    const orderStages = [
+        "Xitoy omborida rasmiylashtirildi",
+        "Kargo yo'lida (Xitoy -> O'zbekiston)",
+        "Bojxona / Saralash markazida",
+        "Yetkazib berildi / Tayyor"
     ];
 
-    let registeredUsers = JSON.parse(localStorage.getItem('apexShopUsers')) || [];
-    let currentUser = JSON.parse(localStorage.getItem('apexShopCurrentUser')) || null;
-    let ordersList = JSON.parse(localStorage.getItem('apexShopOrders')) || [];
+    let isAdminLogged = false;
+    let uploadedPhotoData = "";
+    let activeOrderIdx = null;
+    let chosenCargo = "land";
 
-    function formatMoney(num) {
-        return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    function makeAdminDefaultPhoto(labelText) {
+        const safeText = String(labelText || "APEX ADMIN").slice(0, 22).replace(/[<>&"]/g, "");
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="420" height="280" viewBox="0 0 420 280">
+            <defs>
+                <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#0b1120"/>
+                    <stop offset="55%" stop-color="#0f233b"/>
+                    <stop offset="100%" stop-color="#083344"/>
+                </linearGradient>
+            </defs>
+            <rect width="420" height="280" fill="url(#bg)"/>
+            <rect x="14" y="14" width="392" height="252" rx="16" fill="none" stroke="#00d4ff" stroke-width="2.5"/>
+            <rect x="28" y="26" width="118" height="24" rx="6" fill="#10b981"/>
+            <text x="87" y="42" text-anchor="middle" fill="#052e16" font-family="Arial,sans-serif" font-size="11" font-weight="bold" letter-spacing="1">ADMIN RASM</text>
+            <text x="210" y="128" text-anchor="middle" fill="#00d4ff" font-family="Arial,sans-serif" font-size="14" font-weight="bold" letter-spacing="3">APEX SHOP</text>
+            <text x="210" y="162" text-anchor="middle" fill="#ffffff" font-family="Arial,sans-serif" font-size="22" font-weight="bold">${safeText}</text>
+        </svg>`;
+        return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
     }
 
-    function updateRatesAndPreview() {
-        const rate = parseFloat(document.getElementById('yuan-rate').value) || 0;
-        const landRate = parseFloat(document.getElementById('land-cargo-kg').value) || 0;
-        const aviaRate = parseFloat(document.getElementById('avia-cargo-kg').value) || 0;
-
-        settings = { yuanRate: rate, landCargoKg: landRate, aviaCargoKg: aviaRate };
-        localStorage.setItem('apexShopSettings', JSON.stringify(settings));
-
-        const yuan = parseFloat(document.getElementById('prod-yuan').value) || 0;
-        const weight = parseFloat(document.getElementById('prod-weight').value) || 0;
-        const qty = parseInt(document.getElementById('prod-qty').value) || 1;
-
-        const unitSom = yuan * rate;
-        const totalWeight = weight * qty;
-        const landSum = totalWeight * landRate;
-        const aviaSum = totalWeight * aviaRate;
-
-        document.getElementById('prev-unit-som').textContent = formatMoney(unitSom) + " so'm";
-        document.getElementById('prev-land-som').textContent = formatMoney(landSum) + " so'm";
-        document.getElementById('prev-avia-som').textContent = formatMoney(aviaSum) + " so'm";
-
-        renderProducts();
+    function compressImageToDataUrl(imgElement, maxWidth = 700, quality = 0.78) {
+        const canvas = document.createElement("canvas");
+        let w = imgElement.naturalWidth || imgElement.width || 600;
+        let h = imgElement.naturalHeight || imgElement.height || 400;
+        if (w > maxWidth) {
+            h = Math.round((h * maxWidth) / w);
+            w = maxWidth;
+        }
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(imgElement, 0, 0, w, h);
+        return canvas.toDataURL("image/jpeg", quality);
     }
 
-    function handleFileSelect(input) {
-        const file = input.files[0];
-        const label = document.getElementById('file-label');
-        if (file) {
-            label.textContent = "✅ Tanlandi: " + file.name;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                uploadedBase64Image = e.target.result;
+    let rates = JSON.parse(localStorage.getItem("apex_v5_rates")) || {
+        yuan: 1800,
+        land: 35000,
+        avia: 95000
+    };
+
+    document.getElementById("rate-yuan").value = rates.yuan;
+    document.getElementById("rate-land").value = rates.land;
+    document.getElementById("rate-avia").value = rates.avia;
+
+    let products = JSON.parse(localStorage.getItem("apex_v5_products")) || [
+        { name: "APEX Pro Sport Kostyum", yuan: 85, weight: 0.7, qty: 8, img: makeAdminDefaultPhoto("APEX SPORT SUIT"), fromAdmin: true },
+        { name: "APEX Ocean Parfyum", yuan: 42, weight: 0.3, qty: 15, img: makeAdminDefaultPhoto("APEX PARFYUM"), fromAdmin: true },
+        { name: "APEX Smart Watch Ultra", yuan: 110, weight: 0.25, qty: 6, img: makeAdminDefaultPhoto("APEX WATCH"), fromAdmin: true }
+    ];
+
+    let customer = JSON.parse(localStorage.getItem("apex_v5_customer")) || null;
+    let orders = JSON.parse(localStorage.getItem("apex_v5_orders")) || [
+        {
+            id: "ORD-1042",
+            accountId: "APX-8841",
+            customerName: "Jasurbek",
+            customerPhone: "+998 90 555 44 33",
+            productName: "APEX Pro Sport Kostyum",
+            qty: 2,
+            cargoType: "AVIA KARGO",
+            stageIndex: 1,
+            adminNote: "Tovar Xitoydan uchishga tayyorlandi, reys raqami biriktirildi.",
+            totalSum: 439000
+        }
+    ];
+
+    function fmtMoney(n) {
+        return Math.round(Number(n) || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    }
+
+    function switchView(viewName) {
+        document.getElementById("catalog-view").style.display = viewName === "catalog" ? "block" : "none";
+        document.getElementById("orders-view").style.display = viewName === "orders" ? "block" : "none";
+        document.getElementById("tab-catalog").classList.toggle("active", viewName === "catalog");
+        document.getElementById("tab-orders").classList.toggle("active", viewName === "orders");
+        if (viewName === "orders") {
+            renderClientOrders();
+        }
+    }
+
+    function refreshCustomerUI() {
+        const chip = document.getElementById("user-acc-chip");
+        const authBtn = document.getElementById("auth-btn");
+        if (customer) {
+            chip.style.display = "block";
+            chip.innerHTML = `ID: <b>${customer.accountId}</b> | <b>${customer.name}</b> (+998 ${customer.phone})`;
+            authBtn.textContent = "Chiqish";
+            authBtn.onclick = () => {
+                customer = null;
+                localStorage.removeItem("apex_v5_customer");
+                refreshCustomerUI();
+                renderClientOrders();
             };
-            reader.readAsDataURL(file);
         } else {
-            label.textContent = "📁 Qurilmadan rasm yuklash (ixtiyoriy)";
-            uploadedBase64Image = "";
+            chip.style.display = "none";
+            authBtn.textContent = "Kirish / Ro'yxat";
+            authBtn.onclick = openAuthModal;
         }
+        updateMyOrdersBadge();
     }
 
-    function checkUserStatus() {
-        const userDisplay = document.getElementById('user-display');
-        const regBtn = document.getElementById('reg-btn');
-
-        if (currentUser) {
-            userDisplay.style.display = "block";
-            userDisplay.innerHTML = `👤 <b>${currentUser.name}</b> (+998 ${currentUser.phone})`;
-            regBtn.textContent = "Chiqish";
-            regBtn.onclick = logoutUser;
-        } else {
-            userDisplay.style.display = "none";
-            regBtn.textContent = "Ro'yxatdan o'tish";
-            regBtn.onclick = openRegModal;
-        }
-    }
-
-    function openRegModal() {
-        document.getElementById('reg-error').style.display = 'none';
-        document.getElementById('reg-modal').style.display = 'flex';
+    function openAuthModal() {
+        document.getElementById("auth-error").style.display = "none";
+        document.getElementById("auth-modal").style.display = "flex";
     }
 
     function closeModals() {
-        document.getElementById('reg-modal').style.display = 'none';
-        document.getElementById('admin-modal').style.display = 'none';
-        document.getElementById('order-modal').style.display = 'none';
+        document.getElementById("auth-modal").style.display = "none";
+        document.getElementById("admin-pass-modal").style.display = "none";
+        document.getElementById("order-modal").style.display = "none";
     }
 
-    function registerUser() {
-        const name = document.getElementById('reg-name').value.trim();
-        const phone = document.getElementById('reg-phone').value.trim();
-        const errorBox = document.getElementById('reg-error');
+    function saveCustomerAccount() {
+        const name = document.getElementById("auth-name").value.trim();
+        const phone = document.getElementById("auth-phone").value.trim();
+        const err = document.getElementById("auth-error");
 
         if (name.length < 2) {
-            errorBox.textContent = "Iltimos, ismingizni to'liq kiriting!";
-            errorBox.style.display = "block";
+            err.textContent = "Ismingizni kiriting!";
+            err.style.display = "block";
+            return;
+        }
+        if (phone.length !== 9 || !opCodes.includes(phone.slice(0, 2))) {
+            err.textContent = "Haqiqiy O'zbekiston raqamini kiriting (masalan: 90, 91, 93, 94, 95, 97, 99, 88, 77, 50, 33, 20).";
+            err.style.display = "block";
+            return;
+        }
+        if (/^(\d)\1+$/.test(phone.slice(2))) {
+            err.textContent = "Haqiqiy ishlaydigan raqam kiriting!";
+            err.style.display = "block";
             return;
         }
 
-        if (phone.length !== 9) {
-            errorBox.textContent = "Telefon raqam 9 ta raqamdan iborat bo'lishi kerak!";
-            errorBox.style.display = "block";
-            return;
-        }
-
-        const prefix = phone.substring(0, 2);
-        if (!validPrefixes.includes(prefix)) {
-            errorBox.textContent = `Noto'g'ri kompaniya kodi (${prefix})! Haqiqiy operator kodini kiriting (90, 91, 93, 94, 95, 97, 98, 99, 88, 77, 50, 33, 20).`;
-            errorBox.style.display = "block";
-            return;
-        }
-
-        const numberBody = phone.substring(2);
-        if (/^(\d)\1+$/.test(numberBody)) {
-            errorBox.textContent = "Iltimos, haqiqiy ishlaydigan raqam kiriting!";
-            errorBox.style.display = "block";
-            return;
-        }
-
-        const userObj = { name, phone };
-        currentUser = userObj;
-        localStorage.setItem('apexShopCurrentUser', JSON.stringify(userObj));
-
-        if (!registeredUsers.some(u => u.phone === phone)) {
-            registeredUsers.push(userObj);
-            localStorage.setItem('apexShopUsers', JSON.stringify(registeredUsers));
-        }
-
+        const accountId = "APX-" + Math.floor(1000 + Math.random() * 9000);
+        customer = { accountId, name, phone };
+        localStorage.setItem("apex_v5_customer", JSON.stringify(customer));
         closeModals();
-        checkUserStatus();
-        renderUsersList();
+        refreshCustomerUI();
+        renderClientOrders();
     }
 
-    function logoutUser() {
-        currentUser = null;
-        localStorage.removeItem('apexShopCurrentUser');
-        checkUserStatus();
-    }
-
-    function handleAdminBtn() {
-        if (!isAdmin) {
-            document.getElementById('admin-error').style.display = 'none';
-            document.getElementById('admin-pass-input').value = '';
-            document.getElementById('admin-modal').style.display = 'flex';
+    function handleAdminClick() {
+        if (!isAdminLogged) {
+            document.getElementById("admin-pass-error").style.display = "none";
+            document.getElementById("admin-pass-input").value = "";
+            document.getElementById("admin-pass-modal").style.display = "flex";
         } else {
-            isAdmin = false;
-            document.getElementById('admin-panel').style.display = 'none';
-            const btn = document.getElementById('admin-btn');
-            btn.textContent = "Admin Panel";
-            btn.style.background = "var(--neon-red)";
-            renderProducts();
+            isAdminLogged = false;
+            document.getElementById("admin-panel").style.display = "none";
+            document.getElementById("admin-toggle-btn").textContent = "Admin Panel";
+            renderCatalog();
         }
     }
 
-    function verifyAdmin() {
-        const inputPass = document.getElementById('admin-pass-input').value;
-        const errorBox = document.getElementById('admin-error');
-
-        if (btoa(inputPass) === _0x1a) {
-            isAdmin = true;
+    function checkAdminPassword() {
+        const val = document.getElementById("admin-pass-input").value;
+        const err = document.getElementById("admin-pass-error");
+        if (btoa(val) === _sec) {
+            isAdminLogged = true;
             closeModals();
-            document.getElementById('admin-panel').style.display = 'block';
-            const btn = document.getElementById('admin-btn');
-            btn.textContent = "Admindan Chiqish";
-            btn.style.background = "#333";
-            updateRatesAndPreview();
-            renderUsersList();
-            renderOrdersList();
+            document.getElementById("admin-panel").style.display = "block";
+            document.getElementById("admin-toggle-btn").textContent = "Admindan Chiqish";
+            onSettingsChange();
+            renderAdminOrders();
         } else {
-            errorBox.textContent = "Parol noto'g'ri!";
-            errorBox.style.display = "block";
+            err.textContent = "Parol noto'g'ri!";
+            err.style.display = "block";
         }
     }
 
-    // Zakaz modalini ochish
-    function openOrderModal(index) {
-        activeOrderIndex = index;
-        selectedCargo = 'land';
-        const item = products[index];
-
-        document.getElementById('order-prod-title').textContent = `${item.name} (1 dona vazni: ${item.weightKg} kg)`;
-        document.getElementById('order-qty').value = 1;
-        document.getElementById('order-error').style.display = 'none';
-
-        document.getElementById('land-rate-text').textContent = `${formatMoney(settings.landCargoKg)} so'm / kg`;
-        document.getElementById('avia-rate-text').textContent = `${formatMoney(settings.aviaCargoKg)} so'm / kg`;
-
-        document.getElementById('opt-land').classList.add('active');
-        document.getElementById('opt-avia').classList.remove('active');
-
-        updateOrderCalc();
-        document.getElementById('order-modal').style.display = 'flex';
-    }
-
-    function selectCargoType(type) {
-        selectedCargo = type;
-        document.getElementById('opt-land').classList.toggle('active', type === 'land');
-        document.getElementById('opt-avia').classList.toggle('active', type === 'avia');
-        updateOrderCalc();
-    }
-
-    function updateOrderCalc() {
-        if (activeOrderIndex === null) return;
-        const item = products[activeOrderIndex];
-        const qty = Math.max(1, parseInt(document.getElementById('order-qty').value) || 1);
-
-        const unitBaseSom = item.yuan * (settings.yuanRate || 0);
-        const totalBaseSom = unitBaseSom * qty;
-        const totalWeight = item.weightKg * qty;
-
-        const activeCargoRate = selectedCargo === 'avia'
-            ? (settings.aviaCargoKg || 0)
-            : (settings.landCargoKg || 0);
-
-        const cargoCost = totalWeight * activeCargoRate;
-        const finalCost = totalBaseSom + cargoCost;
-
-        document.getElementById('ord-base-sum').textContent = formatMoney(totalBaseSom) + " so'm";
-        document.getElementById('ord-weight-sum').textContent = totalWeight.toFixed(2) + " kg";
-        document.getElementById('ord-cargo-sum').textContent = formatMoney(cargoCost) + " so'm";
-        document.getElementById('ord-final-sum').textContent = formatMoney(finalCost) + " so'm";
-    }
-
-    function submitOrder() {
-        const errorBox = document.getElementById('order-error');
-        if (!currentUser) {
-            errorBox.textContent = "Zakaz berish uchun avval 'Ro'yxatdan o'tish' tugmasi orqali ism va raqamingizni kiriting!";
-            errorBox.style.display = "block";
-            return;
-        }
-
-        const item = products[activeOrderIndex];
-        const qty = Math.max(1, parseInt(document.getElementById('order-qty').value) || 1);
-        const totalBaseSom = (item.yuan * (settings.yuanRate || 0)) * qty;
-        const totalWeight = item.weightKg * qty;
-        const cargoName = selectedCargo === 'avia' ? 'AVIA KARGO' : 'YER KARGO';
-        const cargoRate = selectedCargo === 'avia' ? (settings.aviaCargoKg || 0) : (settings.landCargoKg || 0);
-        const cargoCost = totalWeight * cargoRate;
-        const finalCost = totalBaseSom + cargoCost;
-
-        const orderObj = {
-            customerName: currentUser.name,
-            customerPhone: "+998 " + currentUser.phone,
-            productName: item.name,
-            qty,
-            cargoName,
-            totalSum: finalCost
+    function onSettingsChange() {
+        rates = {
+            yuan: parseFloat(document.getElementById("rate-yuan").value) || 0,
+            land: parseFloat(document.getElementById("rate-land").value) || 0,
+            avia: parseFloat(document.getElementById("rate-avia").value) || 0
         };
-
-        ordersList.unshift(orderObj);
-        localStorage.setItem('apexShopOrders', JSON.stringify(ordersList));
-
-        closeModals();
-        renderOrdersList();
-        alert(`✅ Zakazingiz qabul qilindi!\nTovar: ${item.name} (${qty} dona)\nKargo: ${cargoName}\nJami: ${formatMoney(finalCost)} so'm`);
+        localStorage.setItem("apex_v5_rates", JSON.stringify(rates));
+        updateAdminPreview();
+        renderCatalog();
     }
 
-    function addProduct() {
-        const name = document.getElementById('prod-name').value.trim();
-        const yuan = parseFloat(document.getElementById('prod-yuan').value);
-        const weightKg = parseFloat(document.getElementById('prod-weight').value) || 0;
-        const qty = parseInt(document.getElementById('prod-qty').value) || 1;
-        const imgUrl = document.getElementById('prod-img-url').value.trim();
+    function updateAdminPreview() {
+        const y = parseFloat(document.getElementById("new-prod-yuan").value) || 0;
+        const w = parseFloat(document.getElementById("new-prod-weight").value) || 0;
+        const q = parseInt(document.getElementById("new-prod-qty").value) || 1;
+        const unitSom = y * rates.yuan;
+        const totW = w * q;
+        document.getElementById("prev-base-one").textContent = fmtMoney(unitSom) + " so'm";
+        document.getElementById("prev-land-all").textContent = fmtMoney(totW * rates.land) + " so'm";
+        document.getElementById("prev-avia-all").textContent = fmtMoney(totW * rates.avia) + " so'm";
+    }
+
+    function showPhotoPreview(src, statusText) {
+        const strip = document.getElementById("photo-preview-strip");
+        const img = document.getElementById("photo-preview-img");
+        const st = document.getElementById("photo-preview-status");
+        img.src = src;
+        st.textContent = statusText;
+        strip.style.display = "flex";
+    }
+
+    function onUrlInputChange() {
+        const u = document.getElementById("new-prod-url").value.trim();
+        if (!uploadedPhotoData && u) {
+            showPhotoPreview(u, "URL rasm biriktirildi");
+        } else if (!uploadedPhotoData && !u) {
+            document.getElementById("photo-preview-strip").style.display = "none";
+        }
+    }
+
+    function readUploadedPhoto(input) {
+        const f = input.files[0];
+        if (!f) return;
+        document.getElementById("new-file-label").textContent = "✅ " + f.name;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const tempImg = new Image();
+            tempImg.onload = () => {
+                uploadedPhotoData = compressImageToDataUrl(tempImg, 720, 0.78);
+                showPhotoPreview(uploadedPhotoData, "Admin rasm siqildi va saqlashga tayyor");
+            };
+            tempImg.src = e.target.result;
+        };
+        reader.readAsDataURL(f);
+    }
+
+    function saveProductsSafe() {
+        try {
+            localStorage.setItem("apex_v5_products", JSON.stringify(products));
+        } catch (err) {
+            alert("Xotira to'ldi! Eski mahsulotlardan birini o'chiring yoki kichikroq rasm tanlang.");
+        }
+    }
+
+    function addNewProduct() {
+        const name = document.getElementById("new-prod-name").value.trim();
+        const yuan = parseFloat(document.getElementById("new-prod-yuan").value);
+        const weight = parseFloat(document.getElementById("new-prod-weight").value) || 0;
+        const qty = parseInt(document.getElementById("new-prod-qty").value) || 1;
+        const url = document.getElementById("new-prod-url").value.trim();
 
         if (!name || isNaN(yuan) || yuan <= 0) {
-            alert("Iltimos, mahsulot nomi va Xitoy narxini (¥) kiriting!");
+            alert("Mahsulot nomi va Xitoy narxini (¥) kiriting!");
             return;
         }
 
-        let finalImg = uploadedBase64Image || imgUrl || ("https://via.placeholder.com/300x200/141418/ff0033?text=" + encodeURIComponent(name));
+        const finalImg = uploadedPhotoData || url || makeAdminDefaultPhoto(name);
+        products.unshift({ name, yuan, weight, qty, img: finalImg, fromAdmin: true });
+        saveProductsSafe();
 
-        products.unshift({ name, yuan, weightKg, qty, img: finalImg });
-        saveAndRender();
+        document.getElementById("new-prod-name").value = "";
+        document.getElementById("new-prod-yuan").value = "";
+        document.getElementById("new-prod-weight").value = "";
+        document.getElementById("new-prod-qty").value = "";
+        document.getElementById("new-prod-url").value = "";
+        document.getElementById("new-prod-file").value = "";
+        document.getElementById("new-file-label").textContent = "📸 Admin rasmini yuklash (Galereya/Fayl)";
+        document.getElementById("photo-preview-strip").style.display = "none";
+        uploadedPhotoData = "";
 
-        document.getElementById('prod-name').value = '';
-        document.getElementById('prod-yuan').value = '';
-        document.getElementById('prod-weight').value = '';
-        document.getElementById('prod-qty').value = '';
-        document.getElementById('prod-img-url').value = '';
-        document.getElementById('prod-img-file').value = '';
-        document.getElementById('file-label').textContent = "📁 Qurilmadan rasm yuklash (ixtiyoriy)";
-        uploadedBase64Image = "";
-        updateRatesAndPreview();
+        updateAdminPreview();
+        renderCatalog();
     }
 
-    function deleteProduct(index) {
-        if (confirm("Ushbu mahsulotni o'chirasizmi?")) {
-            products.splice(index, 1);
-            saveAndRender();
-        }
+    function deleteProduct(idx) {
+        products.splice(idx, 1);
+        saveProductsSafe();
+        renderCatalog();
     }
 
-    function saveAndRender() {
-        localStorage.setItem('apexShopProducts', JSON.stringify(products));
-        renderProducts();
+    function openOrderModal(idx) {
+        activeOrderIdx = idx;
+        chosenCargo = "land";
+        const p = products[idx];
+        document.getElementById("order-item-title").textContent = `${p.name} (1 dona vazni: ${p.weight} kg)`;
+        document.getElementById("order-qty").value = 1;
+        document.getElementById("order-error").style.display = "none";
+        document.getElementById("cargo-land-price").textContent = `${fmtMoney(rates.land)} so'm / kg`;
+        document.getElementById("cargo-avia-price").textContent = `${fmtMoney(rates.avia)} so'm / kg`;
+        document.getElementById("cargo-card-land").classList.add("active");
+        document.getElementById("cargo-card-avia").classList.remove("active");
+        recalcOrderModal();
+        document.getElementById("order-modal").style.display = "flex";
     }
 
-    function renderOrdersList() {
-        const container = document.getElementById('orders-list');
-        document.getElementById('orders-count').textContent = ordersList.length;
-        container.innerHTML = '';
+    function pickCargo(type) {
+        chosenCargo = type;
+        document.getElementById("cargo-card-land").classList.toggle("active", type === "land");
+        document.getElementById("cargo-card-avia").classList.toggle("active", type === "avia");
+        recalcOrderModal();
+    }
 
-        if (ordersList.length === 0) {
-            container.innerHTML = '<p style="color: #666; font-size: 13px;">Hali zakazlar yo\'q.</p>';
+    function recalcOrderModal() {
+        if (activeOrderIdx === null) return;
+        const p = products[activeOrderIdx];
+        const q = Math.max(1, parseInt(document.getElementById("order-qty").value) || 1);
+        const baseSum = (p.yuan * rates.yuan) * q;
+        const totalW = p.weight * q;
+        const cargoRate = chosenCargo === "avia" ? rates.avia : rates.land;
+        const cargoSum = totalW * cargoRate;
+
+        document.getElementById("sum-base").textContent = fmtMoney(baseSum) + " so'm";
+        document.getElementById("sum-weight").textContent = totalW.toFixed(2) + " kg";
+        document.getElementById("sum-cargo").textContent = fmtMoney(cargoSum) + " so'm";
+        document.getElementById("sum-final").textContent = fmtMoney(baseSum + cargoSum) + " so'm";
+    }
+
+    function placeOrder() {
+        const err = document.getElementById("order-error");
+        if (!customer) {
+            err.textContent = "Zakaz berish uchun avval 'Kirish / Ro'yxat' orqali akkaunt yarating!";
+            err.style.display = "block";
             return;
         }
 
-        ordersList.forEach(o => {
-            container.innerHTML += `
-                <div class="list-item">
-                    <b>${o.customerName}</b> (${o.customerPhone})<br>
-                    ${o.productName} × ${o.qty} dona — <b>${o.cargoName}</b><br>
-                    Summa: <b style="color: var(--neon-red);">${formatMoney(o.totalSum)} so'm</b>
-                </div>
-            `;
-        });
+        const p = products[activeOrderIdx];
+        const q = Math.max(1, parseInt(document.getElementById("order-qty").value) || 1);
+        const baseSum = (p.yuan * rates.yuan) * q;
+        const totalW = p.weight * q;
+        const cargoRate = chosenCargo === "avia" ? rates.avia : rates.land;
+        const cargoSum = totalW * cargoRate;
+
+        const newOrder = {
+            id: "ORD-" + Math.floor(1000 + Math.random() * 9000),
+            accountId: customer.accountId,
+            customerName: customer.name,
+            customerPhone: "+998 " + customer.phone,
+            productName: p.name,
+            qty: q,
+            cargoType: chosenCargo === "avia" ? "AVIA KARGO" : "YER KARGO",
+            stageIndex: 0,
+            adminNote: "Buyurtma qabul qilindi, kargoga tayyorlanmoqda.",
+            totalSum: baseSum + cargoSum
+        };
+
+        orders.unshift(newOrder);
+        localStorage.setItem("apex_v5_orders", JSON.stringify(orders));
+        closeModals();
+        updateMyOrdersBadge();
+        renderAdminOrders();
+        switchView("orders");
     }
 
-    function renderUsersList() {
-        const container = document.getElementById('registered-users-list');
-        document.getElementById('users-count').textContent = registeredUsers.length;
-        container.innerHTML = '';
+    function updateMyOrdersBadge() {
+        const myCount = customer
+            ? orders.filter(o => o.customerPhone === "+998 " + customer.phone).length
+            : orders.length;
+        document.getElementById("my-orders-count").textContent = myCount;
+    }
 
-        if (registeredUsers.length === 0) {
-            container.innerHTML = '<p style="color: #666; font-size: 13px;">Hali mijozlar ro\'yxatdan o\'tmagan.</p>';
+    function renderClientOrders() {
+        const box = document.getElementById("client-orders-container");
+        const list = customer
+            ? orders.filter(o => o.customerPhone === "+998 " + customer.phone)
+            : orders;
+
+        if (!list.length) {
+            box.innerHTML = `<div class="order-track-card"><p style="color: var(--text-muted);">Hali buyurtmalar mavjud emas.</p></div>`;
             return;
         }
 
-        registeredUsers.forEach(u => {
-            container.innerHTML += `
-                <div class="list-item">
-                    <span><b>${u.name}</b></span> — <span>+998 ${u.phone}</span>
-                </div>
-            `;
-        });
-    }
-
-    function renderProducts() {
-        const list = document.getElementById('products-list');
-        list.innerHTML = '';
-
-        const rate = settings.yuanRate || 0;
-        const landRate = settings.landCargoKg || 0;
-        const aviaRate = settings.aviaCargoKg || 0;
-
-        let totalTypes = products.length;
-        let totalCount = 0;
-        let totalGoodsSum = 0;
-        let totalLandSum = 0;
-        let totalAviaSum = 0;
-
-        products.forEach((item, index) => {
-            const unitBaseSom = item.yuan * rate;
-            const itemGoodsTotal = unitBaseSom * item.qty;
-            const itemWeightTotal = item.weightKg * item.qty;
-            const itemLandTotal = itemWeightTotal * landRate;
-            const itemAviaTotal = itemWeightTotal * aviaRate;
-
-            totalCount += item.qty;
-            totalGoodsSum += itemGoodsTotal;
-            totalLandSum += itemLandTotal;
-            totalAviaSum += itemAviaTotal;
-
-            list.innerHTML += `
-                <div class="card">
-                    <span class="card-badge">APEX</span>
-                    <i src="${item.img}" alt="${item.name}">
-                    <div class="card-body">
-                        <h3>${item.name}</h3>
-                        <div class="card-base-label">Asl narxi:</div>
-                        <div class="card-price">${formatMoney(unitBaseSom)} so'm</div>
-                        <div class="card-weight-hint">Vazni: <b>${item.weightKg} kg</b> (Yer va Avia kargo zakazda hisoblanadi)</div>
-                        <button class="btn-order" onclick="openOrderModal(${index})">Zakaz qilish (Kargo tanlash)</button>
-                        ${isAdmin ? `
-                            <div class="admin-card-info">
-                                Xitoy narxi: <b>${item.yuan} ¥</b> | Omborda: <b>${item.qty} dona</b><br>
-                                Yer kargo (jami): <b>${formatMoney(itemLandTotal)} so'm</b><br>
-                                Avia kargo (jami): <b>${formatMoney(itemAviaTotal)} so'm</b>
+        box.innerHTML = list.map(o => {
+            const stageText = orderStages[o.stageIndex] || orderStages[0];
+            const bars = [0, 1, 2, 3].map(i => `<div class="step-seg ${i <= o.stageIndex ? "done" : ""}"></div>`).join("");
+            return `
+                <div class="order-track-card">
+                    <div class="order-top">
+                        <div>
+                            <b style="font-size: 16px;">${o.productName}</b> × ${o.qty} dona
+                            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">
+                                Kod: <b>${o.id}</b> | Akkaunt: <b>${o.accountId}</b> | Kargo: <b>${o.cargoType}</b>
                             </div>
-                            <button class="btn-del" onclick="deleteProduct(${index})">O'chirish</button>
-                        ` : ''}
+                        </div>
+                        <span class="status-badge">${stageText}</span>
+                    </div>
+                    <div class="steps-bar">${bars}</div>
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);">
+                        <span>Bosqich ${o.stageIndex + 1} / 4</span>
+                        <b style="color: var(--accent-cyan); font-size: 14px;">${fmtMoney(o.totalSum)} so'm</b>
+                    </div>
+                    <div class="admin-note-box">
+                        <b>Admin izohi:</b> ${o.adminNote || "Izoh kiritilmagan"}
                     </div>
                 </div>
             `;
-        });
-
-        document.getElementById('stat-types-count').textContent = `${totalTypes} xil (${totalCount} dona)`;
-        document.getElementById('stat-goods-sum').textContent = formatMoney(totalGoodsSum) + " so'm";
-        document.getElementById('stat-land-sum').textContent = formatMoney(totalLandSum) + " so'm";
-        document.getElementById('stat-avia-sum').textContent = formatMoney(totalAviaSum) + " so'm";
+        }).join("");
     }
 
-    checkUserStatus();
-    renderProducts();
-    updateRatesAndPreview();
-    renderOrdersList();
+    function renderAdminOrders() {
+        const box = document.getElementById("admin-orders-container");
+        document.getElementById("adm-orders-total").textContent = orders.length;
+
+        if (!orders.length) {
+            box.innerHTML = `<p style="color: var(--text-muted); font-size: 13px;">Hali buyurtma tushmagan.</p>`;
+            return;
+        }
+
+        box.innerHTML = orders.map((o, idx) => `
+            <div class="admin-order-item">
+                <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                        <b>${o.id}</b> — <b>${o.productName}</b> (${o.qty} dona) • <b>${o.cargoType}</b>
+                    </div>
+                    <b style="color: var(--accent-cyan);">${fmtMoney(o.totalSum)} so'm</b>
+                </div>
+                <div class="client-acc-pill">
+                    👤 Mijoz: ${o.customerName} | 📞 Raqam: ${o.customerPhone} | 🆔 Akkaunt: ${o.accountId}
+                </div>
+                <div class="admin-order-controls">
+                    <select id="stage-sel-${idx}">
+                        ${orderStages.map((st, sIdx) => `<option value="${sIdx}" ${o.stageIndex === sIdx ? "selected" : ""}>${st}</option>`).join("")}
+                    </select>
+                    <input type="text" id="note-inp-${idx}" value="${(o.adminNote || "").replace(/"/g, "&quot;")}" placeholder="Mijoz zakaziga izoh yozing...">
+                    <button class="btn-primary" onclick="saveOrderAdminUpdate(${idx})">Saqlash</button>
+                </div>
+            </div>
+        `).join("");
+    }
+
+    function saveOrderAdminUpdate(idx) {
+        const stVal = parseInt(document.getElementById(`stage-sel-${idx}`).value, 10) || 0;
+        const noteVal = document.getElementById(`note-inp-${idx}`).value.trim();
+        orders[idx].stageIndex = stVal;
+        orders[idx].adminNote = noteVal || "Holat yangilandi.";
+        localStorage.setItem("apex_v5_orders", JSON.stringify(orders));
+        renderClientOrders();
+        renderAdminOrders();
+        alert("✅ Buyurtma holati va izohi saqlandi!");
+    }
+
+    function renderCatalog() {
+        const grid = document.getElementById("products-grid");
+        let totQty = 0;
+        let totBase = 0;
+        let totLand = 0;
+        let totAvia = 0;
+
+        grid.innerHTML = products.map((p, idx) => {
+            const unitBase = p.yuan * rates.yuan;
+            const rowBase = unitBase * p.qty;
+            const rowWeight = p.weight * p.qty;
+            const rowLand = rowWeight * rates.land;
+            const rowAvia = rowWeight * rates.avia;
+
+            totQty += p.qty;
+            totBase += rowBase;
+            totLand += rowLand;
+            totAvia += rowAvia;
+
+            const safeSrc = p.img || makeAdminDefaultPhoto(p.name);
+            const fallbackSrc = makeAdminDefaultPhoto(p.name).replace(/'/g, "");
+
+            return `
+                <article class="product-card">
+                    <div class="img-box">
+                        <span class="tag-pill">APEX • ${p.weight} kg</span>
+                        <span class="admin-photo-badge">ADMIN RASM</span>
+                        <img src="${safeSrc}" alt="${p.name}" onerror="this.onerror=null;this.src='${fallbackSrc}';">
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">${p.name}</div>
+                        <div class="price-row">
+                            <span class="price-main">${fmtMoney(unitBase)} so'm</span>
+                            <span class="weight-meta">Asl narx</span>
+                        </div>
+                        <button class="btn-primary" style="width: 100%; margin-top: 8px; padding: 10px;" onclick="openOrderModal(${idx})">
+                            Zakaz qilish (Kargo)
+                        </button>
+                        ${isAdminLogged ? `
+                            <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-muted); line-height: 1.55;">
+                                Xitoy: <b>${p.yuan} ¥</b> | Ombor: <b>${p.qty} dona</b><br>
+                                Yer: <b>${fmtMoney(rowLand)}</b> | Avia: <b>${fmtMoney(rowAvia)}</b>
+                            </div>
+                            <button class="btn-del" onclick="deleteProduct(${idx})">O'chirish</button>
+                        ` : ""}
+                    </div>
+                </article>
+            `;
+        }).join("");
+
+        document.getElementById("adm-stat-count").textContent = `${products.length} xil (${totQty} dona)`;
+        document.getElementById("adm-stat-base").textContent = fmtMoney(totBase) + " so'm";
+        document.getElementById("adm-stat-land").textContent = fmtMoney(totLand) + " so'm";
+        document.getElementById("adm-stat-avia").textContent = fmtMoney(totAvia) + " so'm";
+    }
+
+    refreshCustomerUI();
+    renderCatalog();
+    renderClientOrders();
+    renderAdminOrders();
+    updateAdminPreview();
 </script>
 
 </body>
